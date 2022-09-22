@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}Vehicles{% endblock title %}
+
+{% block content %}
+<div class="modal fade" id="vehicle-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content"></div>
+    </div>
+</div>
+<div class="fade-in">
+    <div class="row mx-3 mb-3 mt-3">
+        {% comment %} <h4 class="">LIST OF CUSTOMERS</h4> {% endcomment %}
+    </div>
+    
+    <div class="row">
+        <div class="col-6 mx-3 mb-1">
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" id="message_container">
+                    <strong>{{message}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-11 mx-3 my-0 align-middle">
+            <button id="create-vehicle" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Create Vehicle</button>
+            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="vehicle-list"/ style="float:right;width:300px;margin-left:auto;">  
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-11 mx-3">
+            <table class="table table-hover caption-top rounded vehicle-list">
+                <caption class="fs-3">VEHICLES</caption>
+                <thead class="text-grey" style="background-color:#9CB4CC">
+                    <tr>
+                    <th scope="col"class="align-middle">Vehicle Number</th>
+                    <th scope="col"class="text-center align-middle">Purchase Date</th>
+                    <th scope="col"class="text-center align-middle">Axles</th>
+                    <th scope="col"class="text-center align-middle">Fuel Capacity</th>
+                    <th scope="col"class="text-center align-middle">Load Capacity</th>
+                    <th scope="col"class="text-center align-middle">Edit</th>
+                    <th scope="col"class="text-center align-middle">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in vehicle_list %}
+                    <tr>
+                        <td class="align-middle">{{item.vehicle_number}}</td>
+                        <td class="text-center align-middle">{{item.purchase_date|date:'d M Y'}}</td>
+                        <td class="text-center align-middle">{{item.axle}} WL</td>
+                        <td class="text-center align-middle">{{item.fuel_capacity|floatformat:0}} Litres</td>
+                        <td class="text-center align-middle">{{item.load_capacity|floatformat:0}} Kg</td>
+                        <td class="align-middle text-center">    
+                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_edit' item.pk %}">
+                                <span class="material-icons align-middle text-center">edit</span>
+                            </a>
+                        </td>
+                        <td class="align-middle text-center">
+                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_delete' item.pk %}">
+                                <span class="material-icons align-middle text-center text-danger">delete</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block customjs %}
+<script type="text/javascript">
+    $(function() {
+        $('#create-vehicle').modalForm({
+            formURL: "{% url 'vehicle_create' %}",
+            modalID: '#vehicle-modal'
+        })
+    });
+</script>
+<script>
+    $(function(){
+        $(".bs-modal").each(function(){
+            $(this).modalForm({
+                formURL: $(this).data('form-url'),
+                modalID: '#vehicle-modal'
+            });
+        });
+    });
+</script>
+<script>
+    var message_ele = document.getElementById("message_container");
+    setTimeout(function(){
+        message_ele.style.display = "none";
+    }, 6000);
+</script>
+
+<script>
+    (function(document) {
+        'use strict';
+
+        var TableFilter = (function(myArray) {
+            var search_input;
+
+            function _onInputSearch(e) {
+                search_input = e.target;
+                var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                myArray.forEach.call(tables, function(table) {
+                    myArray.forEach.call(table.tBodies, function(tbody) {
+                        myArray.forEach.call(tbody.rows, function(row) {
+                            var text_content = row.textContent.toLowerCase();
+                            var search_val = search_input.value.toLowerCase();
+                            row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                        });
+                    });
+                });
+            }
+
+            return {
+                init: function() {
+                    var inputs = document.getElementsByClassName('search-input');
+                    myArray.forEach.call(inputs, function(input) {
+                        input.oninput = _onInputSearch;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function() {
+            if (document.readyState === 'complete') {
+                TableFilter.init();
+            }
+        });
+
+    })(document);
+</script>
+
+{% endblock customjs %}
+
+
+

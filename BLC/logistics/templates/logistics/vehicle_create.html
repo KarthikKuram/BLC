@@ -1,0 +1,113 @@
+{% load widget_tweaks %}
+
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Create Vehicle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        {% if form.non_field_errors %}
+            <div class="alert alert-block alert-danger invalid">
+                {{form.non_field_errors}}
+            </div>
+        {% endif %}
+
+        {% if form.vehicle_number.errors %}
+            {% for error in form.vehicle_number.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.vehicle_number.id_for_label}}"><strong>Vehicle Number<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.vehicle_number class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                    <small class="form-text text-muted">Format: AB-01-KN-2792</small>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.vehicle_number.id_for_label}}"><strong>Vehicle Number<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.vehicle_number class+='form-control' %}
+            <small class="form-text text-muted">Format: AB-01-KN-2792</small>
+        </div>
+        {% endif %}
+
+        {% if form.purchase_date.errors %}
+            {% for error in form.purchase_date.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.purchase_date.id_for_label}}"><strong>Purchase Date<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.purchase_date class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.purchase_date.id_for_label}}"><strong>Purchase Date<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.purchase_date class+='form-control' %}
+        </div>
+        {% endif %}
+
+        {% if form.axle.errors %}
+            {% for error in form.axle.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.axle.id_for_label}}"><strong>Axles<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.axle class+='form-control is-invalid select2_widget' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.axle.id_for_label}}"><strong>Axles<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.axle class+='form-control select2_widget' %}
+        </div>
+        {% endif %}
+
+        {% if form.fuel_capacity.errors %}
+            {% for error in form.fuel_capacity.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.fuel_capacity.id_for_label}}"><strong>Fuel Tank Capacity<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.fuel_capacity class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.fuel_capacity.id_for_label}}"><strong>Fuel Tank Capacity<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.fuel_capacity class+='form-control' placeholder+='Litres' %}
+        </div>
+        {% endif %}
+
+        {% if form.load_capacity.errors %}
+            {% for error in form.load_capacity.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.load_capacity.id_for_label}}"><strong>Max Load Capacity<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.load_capacity class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.load_capacity.id_for_label}}"><strong>Max Load Capacity<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.load_capacity class+='form-control' placeholder+='Kilograms' %}
+        </div>
+        {% endif %}
+    </div>      
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Create</button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function(){
+  $(":input").inputmask();
+ 
+    });
+</script>

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Destinations{% endblock title %}
+
+{% block content %}
+<div class="modal fade" id="destination-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content"></div>
+    </div>
+</div>
+<div class="fade-in">
+    <div class="row mx-3 mb-3 mt-3">
+        {% comment %} <h4 class="">LIST OF CUSTOMERS</h4> {% endcomment %}
+    </div>
+    
+    <div class="row">
+        <div class="col-6 mx-3 mb-1">
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" id="message_container">
+                    <strong>{{message}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-11 mx-3 my-0 align-middle">
+            <button id="create-destination" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Create Destination</button>
+            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="destination-list"/ style="float:right;width:300px;margin-left:auto;">  
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-11 mx-3">
+            <table class="table table-hover caption-top rounded destination-list">
+                <caption class="fs-3">DESTINATIONS</caption>
+                <thead class="text-grey" style="background-color:#9CB4CC">
+                    <tr>
+                    <th scope="col"class="align-middle">Destination Name</th>
+                    <th scope="col"class="align-middle">Address</th>
+                    <th scope="col"class="align-middle">State</th>
+                    <th scope="col"class="text-center align-middle">Edit</th>
+                    <th scope="col"class="text-center align-middle">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in destination_list %}
+                    <tr>
+                        <td class="align-middle">{{item.name}}</td>
+                        <td class="align-middle">{{item.address}}</td>
+                        <td class="align-middle">{{item.state}}</td>
+                        <td class="align-middle text-center">    
+                            <a type="button" class="bs-modal" data-form-url="{% url 'destination_edit' item.pk %}">
+                                <span class="material-icons align-middle text-center">edit</span>
+                            </a>
+                        </td>
+                        <td class="align-middle text-center">
+                            <a type="button" class="bs-modal" data-form-url="{% url 'destination_delete' item.pk %}">
+                                <span class="material-icons align-middle text-center text-danger">delete</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block customjs %}
+<script type="text/javascript">
+    $(function() {
+        $('#create-destination').modalForm({
+            formURL: "{% url 'destination_create' %}",
+            modalID: '#destination-modal'
+        })
+    });
+</script>
+<script>
+    $(function(){
+        $(".bs-modal").each(function(){
+            $(this).modalForm({
+                formURL: $(this).data('form-url'),
+                modalID: '#destination-modal'
+            });
+        });
+    });
+</script>
+<script>
+    var message_ele = document.getElementById("message_container");
+    setTimeout(function(){
+        message_ele.style.display = "none";
+    }, 6000);
+</script>
+
+<script>
+    (function(document) {
+        'use strict';
+
+        var TableFilter = (function(myArray) {
+            var search_input;
+
+            function _onInputSearch(e) {
+                search_input = e.target;
+                var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                myArray.forEach.call(tables, function(table) {
+                    myArray.forEach.call(table.tBodies, function(tbody) {
+                        myArray.forEach.call(tbody.rows, function(row) {
+                            var text_content = row.textContent.toLowerCase();
+                            var search_val = search_input.value.toLowerCase();
+                            row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                        });
+                    });
+                });
+            }
+
+            return {
+                init: function() {
+                    var inputs = document.getElementsByClassName('search-input');
+                    myArray.forEach.call(inputs, function(input) {
+                        input.oninput = _onInputSearch;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function() {
+            if (document.readyState === 'complete') {
+                TableFilter.init();
+            }
+        });
+
+    })(document);
+</script>
+
+{% endblock customjs %}
+
+
+

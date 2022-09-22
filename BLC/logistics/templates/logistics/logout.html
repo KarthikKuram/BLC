@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" type= "text/css" href="{% static 'css/style.css' %}">
+    <title>Balaji Logistics Company</title>
+</head>
+<body>
+  <section class="myform-area">
+    <div class="container vh-90">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 ">
+                <div class="form-area login-form">
+                    <div class="form-content">
+                        <h4 class="text-white">Balaji Logistics Company Private Limited</h4>
+                        <p class="text-center pt-3"><span class="material-icons align-middle" style="font-size:100px;color:white;">warehouse</span></p>
+                        <p></p>
+                        
+                        <blockquote class="blockquote pt-3" style="margin-top: 30px;">
+                          <footer class="blockquote-footer"style="color:white; font-style: italic;">Optimalytics Business Solutions Private Limited</footer>
+                        </blockquote>
+                    </div>
+                    <div class="form-input">                    
+                        <br>
+                        <h2 class="align-middle text-center">You are Logged Out !</h2>
+                        <div>
+                            <a href="{% url 'login_page' %}" class="login_link align-middle text-center">Back to Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>    
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% load widget_tweaks %}
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Update Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        {% if form.non_field_errors %}
+            <div class="alert alert-block alert-danger invalid">
+                {{form.non_field_errors}}
+            </div>
+        {% endif %}
+
+        {% if form.name.errors %}
+            {% for error in form.name.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.name.id_for_label}}"><strong>Customer Name<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.name class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.name.id_for_label}}"><strong>Customer Name<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.name class+='form-control' %}
+        </div>
+        {% endif %}
+
+        {% if form.address.errors %}
+            {% for error in form.address.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.address.id_for_label}}"><strong>Address<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.address class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.address.id_for_label}}"><strong>Address<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.address class+='form-control' %}
+        </div>
+        {% endif %}
+
+        {% if form.state.errors %}
+            {% for error in form.state.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.state.id_for_label}}"><strong>State<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.state class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.state.id_for_label}}"><strong>State<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.state class+='form-control' %}
+        </div>
+        {% endif %}
+    </div>      
+    <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>

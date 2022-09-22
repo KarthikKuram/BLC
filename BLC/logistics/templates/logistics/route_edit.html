@@ -1,0 +1,88 @@
+{% load widget_tweaks %}
+
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Update Route</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        {% if form.non_field_errors %}
+            <div class="alert alert-block alert-danger invalid">
+                {{form.non_field_errors}}
+            </div>
+        {% endif %}
+
+        {% if form.customer.errors %}
+            {% for error in form.customer.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.customer.id_for_label}}"><strong>Source Location<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.customer class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.customer.id_for_label}}"><strong>Source Location<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.customer class+='form-control' %}
+        </div>
+        {% endif %}
+        
+        {% if form.destination.errors %}
+            {% for error in form.destination.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.destination.id_for_label}}"><strong>Destination Location<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.destination class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.destination.id_for_label}}"><strong>Destination Location<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.destination class+='form-control' %}
+        </div>
+        {% endif %}
+
+        {% if form.distance.errors %}
+            {% for error in form.distance.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.distance.id_for_label}}"><strong>Distance in KM<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.distance class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.distance.id_for_label}}"><strong>Distance in KM<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.distance class+='form-control' placeholder+='KM' %}
+        </div>
+        {% endif %}
+
+        {% if form.fuel_required.errors %}
+            {% for error in form.fuel_required.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.fuel_required.id_for_label}}"><strong>Max Fuel Allowed<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.fuel_required class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.fuel_required.id_for_label}}"><strong>Max Fuel Allowed<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.fuel_required class+='form-control' placeholder+='Litres' %}
+        </div>
+        {% endif %}
+
+    </div>      
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>

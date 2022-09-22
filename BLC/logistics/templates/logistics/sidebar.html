@@ -1,0 +1,154 @@
+<style>
+    .menuname{
+    -webkit-transition: font-size .5s ease;
+    -moz-transition: font-size .5s ease;
+    -o-transition: font-size .5s ease;
+    transition: font-size .5s ease;
+    }
+    .menuname:hover { 
+        {% comment %} box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.06); {% endcomment %}
+        font-size: 16px;
+    }
+</style>
+
+<style>
+    .offcanvas{
+        background: #FDFAF6;
+        {% comment %} background: linear-gradient(0deg, #2c5364, #203a43, #0f2027); {% endcomment %}
+    }
+</style>
+
+<div class="offcanvas offcanvas-start sidebar-nav" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-body p-0">
+        <nav class="navbar-light">
+            <ul class="navbar-nav">                
+                <li>
+                    <div class="menuname flex d-flex px-3 mt-3 bordered rounded">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                            DASHBOARD
+                        </div>
+                        <a href="#collapsedashboard" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsedashboard" style="color: #455a64;float:right;margin-left:auto;">
+                            <span class="material-icons align-middle" style="color: #455a64;float:right;margin-left:auto;">arrow_drop_down</span>
+                        </a>
+                    </div>    
+                </li>
+                <div class="collapse show" id="collapsedashboard">                    
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">analytics</span>
+                            <span class="align-middle" style="font-size: 14px">Quick View</span>
+                        </a>
+                    </li>
+                </div> 
+                <li>  
+                    <hr class="dropdown-divider" />
+                </li>                        
+                <li>
+                    <div class="menuname flex d-flex px-3 mt-1 bordered rounded">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                            MASTER DATA
+                        </div>
+                        <a href="#collapsemasterdata" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsemasterdata" style="color: #455a64;float:right;margin-left:auto;">
+                            <span class="material-icons align-middle" style="color: #455a64;float:right;margin-left:auto;">arrow_drop_down</span>
+                        </a>
+                    </div>    
+                </li>
+                <div class="collapse show" id="collapsemasterdata">                    
+                    <li>
+                        <a href="{% url 'customer_list' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">groups</span>
+                            <span class="align-middle" style="font-size: 14px">Customers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'destination_list' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">warehouse</span>
+                            <span class="align-middle" style="font-size: 14px">Destinations</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'vehicle_list' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">local_shipping</span>
+                            <span class="align-middle" style="font-size: 14px">Vehicles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'driver_list' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">person</span>
+                            <span class="align-middle" style="font-size: 14px">Drivers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'route_list' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">map</span>
+                            <span class="align-middle" style="font-size: 14px">Routes</span>
+                        </a>
+                    </li>
+                </div> 
+                <li>  
+                    <hr class="dropdown-divider" />
+                </li>                        
+                <li>
+                    <div class="menuname flex d-flex px-3 mt-1 bordered rounded">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                            OPERATIONS
+                        </div>
+                        <a href="#collapseoperations" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseoperations" style="color: #455a64;float:right;margin-left:auto;">
+                            <span class="material-icons align-middle" style="color: #455a64;float:right;margin-left:auto;">arrow_drop_down</span>
+                        </a>
+                    </div>    
+                </li>
+                <div class="collapse show" id="collapseoperations">                    
+                    <li>
+                        <a href="{% url 'ongoing_trip_list' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">airport_shuttle</span>
+                            <span class="align-middle" style="font-size: 14px">Trips</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">local_gas_station</span>
+                            <span class="align-middle" style="font-size: 14px">Fuel</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">circle</span>
+                            <span class="align-middle" style="font-size: 14px">Tyres</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">engineering</span>
+                            <span class="align-middle" style="font-size: 14px">Maintenance</span>
+                        </a>
+                    </li>
+                </div> 
+                <li>  
+                    <hr class="dropdown-divider" />
+                </li>                        
+                <li>
+                    <div class="menuname flex d-flex px-3 mt-1 bordered rounded">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                            REPORTS
+                        </div>
+                        <a href="#collapsereports" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsereports" style="color: #455a64;float:right;margin-left:auto;">
+                            <span class="material-icons align-middle" style="color: #455a64;float:right;margin-left:auto;">arrow_drop_down</span>
+                        </a>
+                    </div>    
+                </li>
+                <div class="collapse show" id="collapsereports">                    
+                    <li>
+                        <a href="{% url 'dashboard' %}" class="nav-link px-3">
+                            <span class="material-icons align-middle me-2" style="color: #455a64">download</span>
+                            <span class="align-middle" style="font-size: 14px">Downloads</span>
+                        </a>
+                    </li>
+                </div> 
+                <li>  
+                    <hr class="dropdown-divider" />
+                </li>                        
+            </ul>
+        </nav>
+    </div>
+</div>

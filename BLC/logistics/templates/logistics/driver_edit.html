@@ -1,0 +1,54 @@
+{% load widget_tweaks %}
+
+<form method="post" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Update Driver</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        {% if form.non_field_errors %}
+            <div class="alert alert-block alert-danger invalid">
+                {{form.non_field_errors}}
+            </div>
+        {% endif %}
+
+        {% if form.full_name.errors %}
+            {% for error in form.full_name.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.full_name.id_for_label}}"><strong>Driver Full Name<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.full_name class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.full_name.id_for_label}}"><strong>Driver Full Name<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.full_name class+='form-control' %}
+        </div>
+        {% endif %}
+
+        {% if form.contact.errors %}
+            {% for error in form.contact.errors %}
+                <div class="form-group invalid mb-2">
+                    <label for="{{form.contact.id_for_label}}"><strong>Mobile Number<span class="asteriskfield"> *</span> </strong></label>
+                    {% render_field form.contact class+='form-control is-invalid' %}
+                    <div class="invalid-feedback">
+                        <strong>{{error}}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+        <div class="form-group mb-2">
+            <label for="{{form.contact.id_for_label}}"><strong>Mobile Number<span class="asteriskfield"> *</span> </strong></label>
+            {% render_field form.contact class+='form-control' %}
+        </div>
+        {% endif %}
+
+    </div>      
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>
