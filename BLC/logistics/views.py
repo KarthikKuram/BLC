@@ -277,8 +277,13 @@ class TripCloseView(SuccessMessageMixin, LoginRequiredMixin, View):
                 for trip in trip_list:
                     identifier = set([str(trip.id)])
                     id_index = [i for i, e in enumerate(trips) if e in identifier][0]
-                    trip.complete = True
-                    trip.end_date = dates[id_index]
+                    end_date = dates[id_index]
+                    if trip.start_date > datetime.strptime(end_date,"%Y-%m-%d").date():
+                        messages.error(self.request, "Error! Trip End Date cannot be earlier than Trip Start Date", extra_tags='danger')
+                        return redirect('trip_pending')
+                    else:    
+                        trip.complete = True
+                        trip.end_date = end_date
             else:
                 messages.error(self.request, "Error! If a Trip is completed, End Date should be mentioned", extra_tags='danger')
                 return redirect('trip_pending')

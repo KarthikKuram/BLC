@@ -163,6 +163,7 @@ class Trip(models.Model):
 ### FUEL MODEL ###
 class Fuel(models.Model):
     vehicle_number = models.ForeignKey('logistics.Vehicle', on_delete=models.PROTECT, related_name='vehicle_fuel')
+    driver = models.ForeignKey('logistics.Driver', on_delete=models.PROTECT, related_name='driver_fuel')
     date = models.DateField()
     station = models.CharField(max_length=255)
     quantity = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])    
