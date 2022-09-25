@@ -34,7 +34,13 @@ urlpatterns = [
     path('route-delete/<int:pk>', views.RouteDeleteView.as_view(), name='route_delete'),
     ### Trip Url ###
     path('ongoing-trip-list', views.OngoingTripListView.as_view(), name='ongoing_trip_list'),
-    # path('trip-create', views.TripCreateView.as_view(), name='trip_create'),
-    # path('trip-edit/<int:pk>', views.TripUpdateView.as_view(), name='trip_edit'),
-    # path('trip-delete/<int:pk>', views.TripDeleteView.as_view(), name='trip_delete'),
+    path('completed-trip-list', views.CompletedTripListView.as_view(), name='completed_trip_list'),
+    path('trip-create', views.TripCreateView.as_view(), name='trip_create'),
+    path('trip-edit/<int:pk>', views.TripUpdateView.as_view(), name='trip_edit'),
+    path('trip-delete/<int:pk>', views.TripDeleteView.as_view(), name='trip_delete'),
+    path('trip-details/<int:pk>', views.TripDetailView.as_view(), name='trip_details'),
+    path('trip-pending', views.TripPendingListView, name='trip_pending'),
+    path('trip-close', views.TripCloseView.as_view(), name='trip_close'),
+    path('product-autocomplete', views.get_product_listing, name='product_autocomplete'),
+    path('get-available-vehicles', views.get_available_vehicles, name='get_available_vehicles'),
 ]

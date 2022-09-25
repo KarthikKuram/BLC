@@ -1,32 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}On-Going Trips{% endblock title %}
+{% block title %}Completed Trips{% endblock title %}
 
 {% block content %}
-<div class="fade-in">
-    <div class="row mt-1">
-        <div class="col-12">
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a type="button" class="btn btn-warning mx-3" aria-current="page" href="#">On-Going Trips</a>
-                </li>
-                <li class="nav-item">
-                    <a type="button" class="btn btn-light mx-3" href="#">Completed Trips</a>
-                </li>
-                <li class="nav-item">
-                    <a type="button" class="btn btn-light mx-3" href="#">Log New Trip</a>
-                </li>
-                <li class="nav-item">
-                    <a type="button" class="btn btn-light mx-3" href="#">Close Trip</a>
-                </li>
-            </ul>
-        </div>    
-        <div class="col-11 mx-3">
-            <hr style="height:2px;">
-        </div>
-    </div>    
 
+<div class="row mt-1">
+    <div class="col-12">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-warning mx-2"  aria-current="page" href="{% url 'completed_trip_list' %}">Completed Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
+            </li>
+        </ul>
+    </div>    
+    <div class="col-12 mx-2">
+        <hr style="height:2px;">
+    </div>
+</div>    
+
+<div class="fade-in">
     <div class="row">
-        <div class="col-6 mx-3 mb-1">
+        <div class="col-6 mx-2 mb-1">
             {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" id="message_container">
                     <strong>{{message}}</strong>
@@ -37,45 +38,38 @@
     </div>
 
     <div class="row">
-        <div class="col-11 mx-3 my-0 align-middle">
+        <div class="col-12 mx-2 my-0 align-middle">
             <input type="search" placeholder="Search..." class="form-control search-input my-1" data-table="trip-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
     </div>
 
     <div class="row mt-1">
-        <div class="col-11 mx-3">
+        <div class="col-12 mx-2">
             <table class="table table-hover caption-top rounded trip-list">
-                <caption class="fs-3">ON-GOING TRIPS</caption>
+                <caption class="fs-3">COMPLETED TRIPS</caption>
                 <thead class="text-grey" style="background-color:#ade8f4">
                     <tr>
                         <th scope="col"class="align-middle">Trip ID</th>
-                        <th scope="col"class="text-center align-middle">Date</th>
+                        <th scope="col"class="text-center align-middle">Start Date</th>
+                        <th scope="col"class="text-center align-middle">Completed Date</th>
                         <th scope="col"class="text-center align-middle">Source</th>
                         <th scope="col"class="text-center align-middle">Destination</th>
                         <th scope="col"class="text-center align-middle">Vehicle</th>
                         <th scope="col"class="text-center align-middle">Driver</th>
                         <th scope="col"class="text-center align-middle">Product</th>
-                        <th scope="col"class="text-center align-middle">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in vehicle_list %}
+                    {% for item in trip_list %}
                     <tr>
-                        <td class="align-middle">{{item.vehicle_number}}</td>
-                        <td class="text-center align-middle">{{item.purchase_date|date:'d M Y'}}</td>
-                        <td class="text-center align-middle">{{item.axle}} WL</td>
-                        <td class="text-center align-middle">{{item.fuel_capacity|floatformat:0}} Litres</td>
-                        <td class="text-center align-middle">{{item.load_capacity|floatformat:0}} Kg</td>
-                        <td class="align-middle text-center">    
-                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_edit' item.pk %}">
-                                <span class="material-icons align-middle text-center">edit</span>
-                            </a>
-                        </td>
-                        <td class="align-middle text-center">
-                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_delete' item.pk %}">
-                                <span class="material-icons align-middle text-center text-danger">delete</span>
-                            </a>
-                        </td>
+                        <td class="align-middle">{{item.trip_id}}</td>
+                        <td class="text-center align-middle">{{item.start_date|date:'d M Y'}}</td>
+                        <td class="text-center align-middle">{{item.end_date|date:'d M Y'}}</td>
+                        <td class="text-center align-middle">{{item.customer.name}}</td>
+                        <td class="text-center align-middle">{{item.destination.name}}</td>
+                        <td class="text-center align-middle">{{item.vehicle_number.vehicle_number}}</td>
+                        <td class="text-center align-middle">{{item.driver.full_name}}</td>
+                        <td class="text-center align-middle">{{item.product}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}New Trip{% endblock title %}
+
+{% block content %}
+
+<style>
+    .typeahead, .tt-query, .tt-hint {
+	font-size: 1rem; /* Set input font size */
+	}
+    .twitter-typeahead{
+        padding: 0px !important;
+        display: block !important;
+        
+    }
+    .typeahead {
+        background-color: #FFFFFF;
+    }
+    .typeahead:focus {
+        border: 2px solid #0097CF;
+    }
+    .tt-query {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    }
+    .tt-hint {
+        color: #999999;
+    }
+    .tt-menu {
+        background-color: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        margin-top: 12px;
+        padding: 8px 0;
+        width: 422px;
+    }
+    .tt-suggestion {
+        font-size: 16px;  /* Set suggestion dropdown font size */
+        padding: 3px 20px;
+    }
+    .tt-suggestion:hover {
+        cursor: pointer;
+        background-color: #0097CF;
+        color: #FFFFFF;
+    }
+    .tt-suggestion p {
+        margin: 0;
+    }
+</style>
+
+<div class="row mt-1">
+    <div class="col-12">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-warning mx-3" aria-current="page" href="{% url 'trip_create' %}">Log New Trip</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
+            </li>
+        </ul>
+    </div>    
+    <div class="col-11 mx-3">
+        <hr style="height:2px;">
+    </div>
+</div>    
+<div class="fade-in">
+    <div class="row">
+        <div class="col-6">
+            <h4 class="mx-3 mt-2 mb-2 text-muted">Log New Trip</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 mx-3 mb-0">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" id = 'message_container'>
+                    <strong>{{ message}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-12 col-md-9 mx-3 mb-0 mt-2">
+        <div class="rounded p-3 mt-2" style="background-color:#eff7f6;">
+            <p class="fs-5" style="color:#BA135D;">Trip Details</p>
+            <form class="row g-3" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-block alert-danger invalid">
+                            {{form.non_field_errors}}
+                        </div>
+                    {% endif %}
+                </fieldset>    
+                
+                <div class="col-md-4">    
+                    <label for="{{form.trip_id.id_for_label}}" class="form-label"><strong>Trip ID</strong></label>
+                    {% if form.trip_id.errors %}
+                        {% render_field form.trip_id class+='form-control is-invalid' %}
+                        {% for error in form.trip_id.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.trip_id class+='form-control' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">    
+                    <label for="{{form.start_date.id_for_label}}" class="form-label"><strong>Start Date</strong></label>
+                    {% if form.start_date.errors %}
+                        {% render_field form.start_date class+='form-control is-invalid' %}
+                        {% for error in form.start_date.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.start_date class+='form-control' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">    
+                    <label for="{{form.customer.id_for_label}}" class="form-label"><strong>Source</strong></label>
+                    {% if form.customer.errors %}
+                        {% render_field form.customer class+='form-control is-invalid select2_widget' %}
+                        {% for error in form.customer.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.customer class+='form-control select2_widget' %}
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-4">    
+                    <label for="{{form.destination.id_for_label}}" class="form-label"><strong>Destination</strong></label>
+                    {% if form.destination.errors %}
+                        {% render_field form.destination class+='form-control is-invalid select2_widget' %}
+                        {% for error in form.destination.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.destination class+='form-control select2_widget' %}
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-4">    
+                    <label for="{{form.vehicle_number.id_for_label}}" class="form-label"><strong>Vehicle</strong></label>
+                    {% if form.vehicle_number.errors %}
+                        {% render_field form.vehicle_number class+='form-control is-invalid select2_widget' %}
+                        {% for error in form.vehicle_number.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.vehicle_number class+='form-control select2_widget' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">    
+                    <label for="{{form.driver.id_for_label}}" class="form-label"><strong>Driver</strong></label>
+                    {% if form.driver.errors %}
+                        {% render_field form.driver class+='form-control is-invalid select2_widget' %}
+                        {% for error in form.driver.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.driver class+='form-control select2_widget' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-8">    
+                    <label for="{{form.product.id_for_label}}" class="form-label"><strong>Product</strong></label>
+                    {% if form.product.errors %}
+                        {% render_field form.product class+='form-control is-invalid' %}
+                        {% for error in form.product.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.product class+='form-control' placeholder+='Type for suggestions'  %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">    
+                    <label for="{{form.load.id_for_label}}" class="form-label"><strong>Product Weight</strong></label>
+                    {% if form.load.errors %}
+                        {% render_field form.load class+='form-control is-invalid' %}
+                        {% for error in form.load.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.load class+='form-control' placeholder+='KG' %}
+                    {% endif %}
+                </div>
+
+                <div class="d-flex flex justify-content-center align-items-center">
+                    <button type="submit" class="btn btn-success" style="width:10%;padding:5px;">Create</button>
+                </div>    
+            </form>
+        </div>    
+    </div>
+</div>
+{% endblock %}
+        
+
+{% block customjs %}
+
+<script>
+    function typeahead_initialize(){
+        var product_names = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+                url: "{% url 'product_autocomplete' %}",
+                ttl: 5,
+            }
+        });
+        product_names.initialize();
+        
+        $('.AutoComplete').typeahead({
+            hint:true,
+            highlight: true,
+            minLength:1
+        }, {
+            name: 'product_names',
+            source: product_names
+        }).on('.AutoComplete:selected', function(obj, value){
+        });    
+    }
+</script>
+
+<script>
+    $(document).ready(function(){
+        typeahead_initialize();
+        $('#id_start_date').on('change', function(){
+            var chosen_date = $(this).val();
+            $.ajax({
+                url: "{% url 'get_available_vehicles' %}",
+                data:{
+                    'chosen_date': chosen_date
+                },
+                success: function(data){
+                    $('#id_vehicle_number').empty();
+                    $('#id_driver').empty();
+                    $('#id_vehicle_number').append(
+                        $('<option></option>').html('---------')
+                    );
+                    $('#id_driver').append(
+                        $('<option></option>').html('---------')
+                    );
+                    for (var i = 0; i < data['available_vehicles'].length; i++) {
+                        $('#id_vehicle_number').append(
+                            $('<option></option>').val(data['available_vehicles'][i][0]).html(data['available_vehicles'][i][1])
+                        );
+                    };
+                    for (var i = 0; i < data['available_drivers'].length; i++) {
+                        $('#id_driver').append(
+                            $('<option></option>').val(data['available_drivers'][i][0]).html(data['available_drivers'][i][1])
+                        );
+                    };
+
+                },
+            });
+        });
+
+    });
+</script>
+{% endblock customjs %}

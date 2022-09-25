@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Close Trips{% endblock title %}
+
+{% block content %}
+<div class="row mt-1">
+    <div class="col-12">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-2" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-warning mx-2" aria-current="page" href="#" style="border:1px solid black;">Close Trip</a>
+            </li>
+        </ul>
+    </div>    
+    <div class="col-12 mx-2">
+        <hr style="height:2px;">
+    </div>
+</div>    
+
+<div class="fade-in">
+    <div class="row">
+        <div class="col-6 mx-2 mb-1">
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" id="message_container">
+                    <strong>{{message}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <form action="{% url 'trip_close' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-12 mx-2 my-0 align-middle">
+                <button type="submit" class="btn btn-dark btn-sm my-3" style="float:left;">Close Trips</button>
+                <input type="search" placeholder="Search..." class="form-control search-input my-1" data-table="trip-list"/ style="float:right;width:300px;margin-left:auto;">  
+            </div>
+        </div>
+    
+        <div class="row mt-1">
+            <div class="col-12 mx-2">
+                <table class="table table-hover caption-top rounded trip-list">
+                    <caption class="fs-3">CLOSE TRIPS</caption>
+                    <thead class="text-grey" style="background-color:#ade8f4">
+                        <tr>
+                            <th scope="col"class="align-middle">Trip ID</th>
+                            <th scope="col"class="text-center align-middle">Start Date</th>
+                            <th scope="col"class="text-center align-middle">Source</th>
+                            <th scope="col"class="text-center align-middle">Destination</th>
+                            <th scope="col"class="text-center align-middle">Vehicle</th>
+                            <th scope="col"class="text-center align-middle">Driver</th>
+                            <th scope="col"class="text-center align-middle">Product</th>
+                            <th scope="col"class="text-center align-middle">Completed ?</th>
+                            <th scope="col"class="text-center align-middle">End Date ?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data %}
+                        <tr>
+                            <td class="align-middle">{{item.trip_id}}</td>
+                            <td class="text-center align-middle">{{item.start_date|date:'d M Y'}}</td>
+                            <td class="text-center align-middle">{{item.customer.name}}</td>
+                            <td class="text-center align-middle">{{item.destination.name}}</td>
+                            <td class="text-center align-middle">{{item.vehicle_number.vehicle_number}}</td>
+                            <td class="text-center align-middle">{{item.driver.full_name}}</td>
+                            <td class="text-center align-middle">{{item.product}}</td>
+                            <td class="align-middle text-center">
+                                <input class="form-check-input complete_track" type="checkbox" value="{{item.id}}" name="trips">
+                            </td>
+                            <td class="text-center align-middle">
+                                <span class="d-inline-block" tabindex="0"  data-toggle="tooltip" data-placement="top" title="Check Completed to Activate" >
+                                    <input class="form-control end_dates bg-light" type="date" name="dates">
+                                </span>    
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>        
+</div>
+{% endblock content %}
+
+{% block customjs %}
+<script>
+    var message_ele = document.getElementById("message_container");
+    setTimeout(function(){
+        message_ele.style.display = "none";
+    }, 6000);
+</script>
+
+<script>
+    (function(document) {
+        'use strict';
+
+        var TableFilter = (function(myArray) {
+            var search_input;
+
+            function _onInputSearch(e) {
+                search_input = e.target;
+                var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                myArray.forEach.call(tables, function(table) {
+                    myArray.forEach.call(table.tBodies, function(tbody) {
+                        myArray.forEach.call(tbody.rows, function(row) {
+                            var text_content = row.textContent.toLowerCase();
+                            var search_val = search_input.value.toLowerCase();
+                            row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                        });
+                    });
+                });
+            }
+
+            return {
+                init: function() {
+                    var inputs = document.getElementsByClassName('search-input');
+                    myArray.forEach.call(inputs, function(input) {
+                        input.oninput = _onInputSearch;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function() {
+            if (document.readyState === 'complete') {
+                TableFilter.init();
+            }
+        });
+
+    })(document);
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.end_dates').prop('disabled', true);
+
+        $('.complete_track').click(function(){
+            $this =$(this)
+            $input = $(this).closest('td').next().find('input.end_dates')
+            $tool = $(this).closest('td').next().find('span.d-inline-block')
+            if (this.checked) {
+                $input.prop('disabled', false);
+                $tool.tooltip('disable');
+                $input.select();
+            } else if(!this.checked){
+                $input.val('');
+                $input.prop('disabled', true);
+                $tool.tooltip('enable');
+            }
+        });
+    });
+</script>
+{% endblock customjs %}
+
+
+

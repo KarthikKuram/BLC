@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import ProtectedError
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, ListView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView, View
+from django.db.models import Q, Max
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
 from logistics.models import *
 from logistics.forms import *
+from datetime import date
 
 
 ### Template Views for Login, Logout and Dashboard ###
@@ -206,8 +210,101 @@ class RouteDeleteView(LoginRequiredMixin, BSModalDeleteView):
 ### Trip Views ###
 class OngoingTripListView(LoginRequiredMixin, ListView):
     model = Trip
-    template_name = 'trip_list.html'
+    template_name = 'trip_ongoing_list.html'
     
     def get_queryset(self):
         return self.model.objects.filter(complete=False)
     
+class CompletedTripListView(LoginRequiredMixin, ListView):
+    model = Trip
+    template_name = 'trip_completed_list.html'
+    
+    def get_queryset(self):
+        return self.model.objects.filter(complete=True)
+    
+class TripCreateView(LoginRequiredMixin, CreateView):
+    model = Trip
+    template_name = 'trip_create.html'
+    form_class = TripCreateForm
+    success_url = reverse_lazy('ongoing_trip_list')
+    success_message = "New Trip has been logged successfully"
+
+@login_required    
+def get_product_listing(request):
+    qs = list(Trip.objects.values_list('product',flat=True))
+    return JsonResponse(qs, safe = False)    
+    
+class TripUpdateView(LoginRequiredMixin, UpdateView):
+    model = Trip
+    template_name = 'trip_edit.html'
+    form_class = TripCreateForm
+    success_url = reverse_lazy('ongoing_trip_list')
+    success_message = "Trip has been edited successfully"    
+    
+class TripDeleteView(LoginRequiredMixin, BSModalDeleteView):
+    model = Trip
+    template_name = 'trip_delete.html'
+    error_template = 'ongoing_trip_list.html'
+    success_url = reverse_lazy('ongoing_trip_list')
+    success_message = ""
+
+    def post(self, request, *args, **kwargs):
+        try:
+            post = self.delete(request, *args, **kwargs)
+            messages.success(request,"Trip has been deleted successfully",extra_tags='success')
+            return post
+        except ProtectedError:
+            messages.error(request,"You cannot delete this entry",extra_tags='danger')
+            return redirect('ongoing_trip_list')
+
+class TripDetailView(LoginRequiredMixin, DetailView):
+    model = Trip
+    template_name = 'trip_detail.html'
+    
+@login_required
+def TripPendingListView(request):
+    queryset = Trip.objects.filter(complete = False) 
+    return render(request,'trip_complete.html', {'data':queryset})           
+    
+class TripCloseView(SuccessMessageMixin, LoginRequiredMixin, View):    
+    def post(self, request, *args, **kwargs):
+        trips = self.request.POST.getlist('trips')
+        dates = [i for i in self.request.POST.getlist('dates') if i]
+                
+        if len(trips) > 0:
+            if len(trips) == len(dates):
+                trip_list = Trip.objects.filter(pk__in = trips)
+                for trip in trip_list:
+                    identifier = set([str(trip.id)])
+                    id_index = [i for i, e in enumerate(trips) if e in identifier][0]
+                    trip.complete = True
+                    trip.end_date = dates[id_index]
+            else:
+                messages.error(self.request, "Error! If a Trip is completed, End Date should be mentioned", extra_tags='danger')
+                return redirect('trip_pending')
+            
+                
+            Trip.objects.bulk_update(trip_list, ['end_date','complete'])
+            messages.success(self.request, "Selected Vehicle Trips Completed Successfully", extra_tags='success')
+            
+        return redirect('ongoing_trip_list')   
+    
+@login_required
+def get_available_vehicles(request):
+    chosen_date = datetime.strptime(request.GET.get('chosen_date'),"%Y-%m-%d").date()
+    # Filter Trip Dataset #
+    trip_qs = Trip.objects.all()
+    ongoing_trip_id = trip_qs.filter(end_date = None)
+    ongoing_trip_vehicles = ongoing_trip_id.values('vehicle_number')
+    ongoing_trip_drivers = ongoing_trip_id.values('driver')
+    completed_trip_id = trip_qs.exclude(id__in = ongoing_trip_id)
+    completed_trip_vehicles_exclude = completed_trip_id.filter(start_date__lte = chosen_date, end_date__gte = chosen_date).values('vehicle_number')
+    completed_trip_drivers_exclude = completed_trip_id.filter(start_date__lte = chosen_date, end_date__gte = chosen_date).values('driver')
+    
+    # Filter Available Vehicles #
+    available_vehicles = list(Vehicle.objects.exclude(Q(id__in = ongoing_trip_vehicles) | Q(id__in = completed_trip_vehicles_exclude)).values_list('id','vehicle_number'))
+    available_drivers = list(Driver.objects.exclude(Q(id__in = ongoing_trip_drivers) | Q(id__in = completed_trip_drivers_exclude)).values_list('id','full_name'))
+    return JsonResponse(data={
+        'available_vehicles': available_vehicles,
+        'available_drivers': available_drivers,
+        })

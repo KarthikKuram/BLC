@@ -58,7 +58,7 @@ class Destination(models.Model):
 class Driver(models.Model):
     full_name = models.CharField(max_length=255)
     contact = models.CharField(max_length=10, unique=True, validators=[mobile_number])
-    
+    available = models.BooleanField(default=True)
     class Meta:
         verbose_name = "Driver"
         verbose_name_plural = "Drivers"
@@ -81,6 +81,7 @@ class Vehicle(models.Model):
     axle = models.IntegerField(choices=Axle.choices)
     fuel_capacity = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     load_capacity = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    available = models.BooleanField(default=True)
     
     class Meta:
         verbose_name = "Vehicle"
@@ -144,10 +145,12 @@ class Trip(models.Model):
     customer = models.ForeignKey('logistics.Customer', on_delete=models.PROTECT, related_name='customer_trips')
     destination = models.ForeignKey('logistics.Destination', on_delete=models.PROTECT, related_name='destination_trips')
     vehicle_number = models.ForeignKey('logistics.Vehicle',on_delete=models.PROTECT, related_name='vehicle_trips')    
-    date = models.DateField()
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
     driver = models.ForeignKey('logistics.Driver', on_delete=models.PROTECT, related_name='driver_trips')
     product = models.CharField(max_length=255)
     load = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    message_id = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
     complete = models.BooleanField(default=False)
     
     class Meta:
@@ -155,7 +158,7 @@ class Trip(models.Model):
         verbose_name_plural = "Trips"
         
     def __str__(self):
-        return '%s || %s' % (self.customer, self.vehicle_number)    
+        return '%s || %s' % (self.trip_id, self.customer)    
     
 ### FUEL MODEL ###
 class Fuel(models.Model):

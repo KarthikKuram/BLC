@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Trip Details{% endblock title %}
+
+{% block content %}
+
+<div class="row mt-1">
+    <div class="col-12">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
+            </li>
+        </ul>
+    </div>    
+    <div class="col-11 mx-3">
+        <hr style="height:2px;">
+    </div>
+</div>    
+<div class="fade-in">
+    <div class="row">
+        <div class="col-6">
+            <h4 class="mx-3 mt-2 mb-2 text-muted">Trip Details</h3>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-9 mx-3 mb-0 mt-2">
+        <div class="rounded p-3 mt-2" style="background-color:#f5ebe0;">
+            <div class="row g-3">
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Trip ID</strong></label>
+                    <p class="form-control">{{trip.trip_id}}</p>
+                </div>
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Start Date</strong></label>
+                    <p class="form-control">{{trip.start_date|date:'d M Y'}}</p>
+                </div>
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Source</strong></label>
+                    <p class="form-control">{{trip.customer.name}}</p>
+                </div>
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Destination</strong></label>
+                    <p class="form-control">{{trip.destination.name}}</p>
+                </div>
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Vehicle Number</strong></label>
+                    <p class="form-control">{{trip.vehicle_number.vehicle_number}}</p>
+                </div>
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Driver</strong></label>
+                    <p class="form-control">{{trip.driver.full_name}}</p>
+                </div>
+                <div class="col-md-8">    
+                    <label class="form-label"><strong>Product</strong></label>
+                    <p class="form-control">{{trip.product}}</p>
+                </div>
+                <div class="col-md-4">    
+                    <label class="form-label"><strong>Product Weight</strong></label>
+                    <p class="form-control">{{trip.load}} Kg</p>
+                </div>
+                
+                <div class="d-flex flex justify-content-center align-items-center">
+                    <a href="{% url 'ongoing_trip_list' %}" type="submit" class="btn btn-secondary" style="width:10%;padding:5px;">Back</a>
+                </div>    
+            </div>
+        </div>    
+    </div>
+</div>
+{% endblock %}
+        
+
+{% block customjs %}
+
+<script>
+    function typeahead_initialize(){
+        var product_names = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+                url: "{% url 'product_autocomplete' %}",
+                ttl: 5,
+            }
+        });
+        product_names.initialize();
+        
+        $('.AutoComplete').typeahead({
+            hint:true,
+            highlight: true,
+            minLength:1
+        }, {
+            name: 'product_names',
+            source: product_names
+        }).on('.AutoComplete:selected', function(obj, value){
+        });    
+    }
+</script>
+
+<script>
+    $(document).ready(function(){
+        typeahead_initialize();
+    });
+</script>
+{% endblock customjs %}
