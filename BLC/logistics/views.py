@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView, View
-from django.db.models import Q, Max
+from django.db.models import Q, Max, F
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
 from logistics.models import *
 from logistics.forms import *
@@ -284,6 +284,16 @@ class TripCloseView(SuccessMessageMixin, LoginRequiredMixin, View):
                     else:    
                         trip.complete = True
                         trip.end_date = end_date
+                        
+                        # Get Kms Travelled by Route
+                        run_kms = trip.route.distance
+                        wheels = Wheel.objects.filter(vehicle_number=trip.vehicle_number)
+                        if wheels.exists():
+                            for wheel in wheels:
+                                wheel.usage = F('usage') + run_kms
+                                
+                            Wheel.objects.bulk_update(wheels, ['usage'])
+                        
             else:
                 messages.error(self.request, "Error! If a Trip is completed, End Date should be mentioned", extra_tags='danger')
                 return redirect('trip_pending')
@@ -313,3 +323,121 @@ def get_available_vehicles(request):
         'available_vehicles': available_vehicles,
         'available_drivers': available_drivers,
         })
+    
+
+### Fuel Views ###
+class FuelListView(LoginRequiredMixin, ListView):
+    model = Fuel
+    template_name = 'fuel_list.html'    
+    
+class FuelCreateView(LoginRequiredMixin, CreateView):
+    model = Fuel
+    form_class = FuelCreateForm
+    template_name = 'fuel_create.html'    
+    success_url = reverse_lazy('fuel_list')
+    success_message = "Fuel Bill has been recorded successfully"
+
+class FuelUpdateView(LoginRequiredMixin, UpdateView):
+    model = Fuel
+    form_class = FuelCreateForm
+    template_name = 'fuel_edit.html'    
+    success_url = reverse_lazy('fuel_list')
+    success_message = "Fuel Bill has been edited successfully"
+    
+class FuelDeleteView(LoginRequiredMixin, BSModalDeleteView):
+    model = Fuel
+    template_name = 'fuel_delete.html'
+    error_template = 'fuel_list.html'
+    success_url = reverse_lazy('fuel_list')
+    success_message = ""
+
+    def post(self, request, *args, **kwargs):
+        try:
+            post = self.delete(request, *args, **kwargs)
+            messages.success(request,"Fuel Bill has been deleted successfully",extra_tags='success')
+            return post
+        except ProtectedError:
+            messages.error(request,"You cannot delete this entry",extra_tags='danger')
+            return redirect('fuel_list')
+
+@login_required    
+def get_station_listing(request):
+    qs = list(Fuel.objects.values_list('station',flat=True).distinct())
+    return JsonResponse(qs, safe = False)    
+        
+### Wheel Views ###
+class WheelListView(LoginRequiredMixin, ListView):
+    model = Wheel
+        
+    def get_queryset(self):
+        return self.model.objects.filter(vehicle_number=self.kwargs['pk'])
+    
+    def get_context_data(self, **kwargs):
+        context = super(WheelListView, self).get_context_data(**kwargs)
+        context['vehicle_number'] = Vehicle.objects.get(pk=self.kwargs['pk'])
+        return context
+        
+class WheelCreateView(LoginRequiredMixin, CreateView):    
+    model = Wheel
+    template_name = 'wheel_create.html'
+    form_class = WheelCreateForm
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.vehicle = Vehicle.objects.get(pk=self.kwargs['pk'])
+        return super(WheelCreateView, self).dispatch(request, *args, **kwargs)
+        
+    def get_context_data(self, **kwargs):
+        context = super(WheelCreateView, self).get_context_data(**kwargs)
+        context['wheels_form'] = forms.modelformset_factory(Wheel, WheelCreateForm, 
+                                      fields=['serial_number','purchase_date','running_life'], 
+                                      extra = self.vehicle.axle, can_delete = False)(queryset=Wheel.objects.none())
+        context['vehicle_number'] = self.vehicle
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        formset = forms.modelformset_factory(Wheel, WheelCreateForm, 
+                                      fields=['serial_number','purchase_date','running_life'], 
+                                      can_delete = False)(request.POST or None)
+        if formset.is_valid():
+            return self.form_valid(formset)
+        else:
+            return render(request, 'wheel_create.html', {'wheels_form' : formset, 'vehicle_number' : self.vehicle})
+        
+    def form_valid(self, formset):
+        for form in formset:
+            wheel = form.save(commit=False)
+            wheel.vehicle_number = self.vehicle
+            wheel.save()
+        return HttpResponseRedirect(reverse('vehicle_list'))
+    
+class WheelUpdateView(LoginRequiredMixin, UpdateView):
+    model = Wheel
+    template_name = 'wheel_edit.html'
+    form_class = WheelCreateForm
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.vehicle = Vehicle.objects.get(pk=self.kwargs['pk'])
+        return super(WheelUpdateView, self).dispatch(request, *args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        qs = Wheel.objects.filter(vehicle_number=self.vehicle)
+        wheels_form = forms.modelformset_factory(Wheel, WheelCreateForm, 
+                                      fields=['serial_number','purchase_date','running_life'], extra=0,
+                                      can_delete = False)(queryset=qs)
+        return render(request, 'wheel_edit.html', {'wheels_form' : wheels_form, 'vehicle_number' : self.vehicle})
+        
+    def post(self, request, *args, **kwargs):
+        formset = forms.modelformset_factory(Wheel, WheelCreateForm, 
+                                      fields=['serial_number','purchase_date','running_life'], 
+                                      can_delete = False)(request.POST or None)
+        if formset.is_valid():
+            return self.form_valid(formset)
+        else:
+            return render(request, 'wheel_edit.html', {'wheels_form' : formset, 'vehicle_number' : self.vehicle})
+        
+    def form_valid(self, formset):
+        for form in formset:
+            wheel = form.save(commit=False)
+            wheel.vehicle_number = self.vehicle
+            wheel.save()
+        return HttpResponseRedirect(reverse('vehicle_list'))

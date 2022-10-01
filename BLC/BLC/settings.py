@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrap_modal_forms',
     'logistics',
-    'indian_numbers'
+    'indian_numbers',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

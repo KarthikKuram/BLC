@@ -4,7 +4,7 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block title %}Update Trip{% endblock title %}
+{% block title %}Add Fuel Bill{% endblock title %}
 
 {% block content %}
 
@@ -52,31 +52,10 @@
     }
 </style>
 
-<div class="row mt-1">
-    <div class="col-12">
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
-            </li>
-            <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
-            </li>
-            <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
-            </li>
-            <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
-            </li>
-        </ul>
-    </div>    
-    <div class="col-11 mx-3">
-        <hr style="height:2px;">
-    </div>
-</div>    
 <div class="fade-in">
     <div class="row">
         <div class="col-6">
-            <h4 class="mx-3 mt-2 mb-2 text-muted">Update Trip</h3>
+            <h4 class="mx-3 mt-2 mb-2 text-muted">New Fuel Bill</h3>
         </div>
     </div>
     <div class="row">
@@ -92,8 +71,8 @@
     </div>
 
     <div class="col-12 col-md-9 mx-3 mb-0 mt-2">
-        <div class="rounded p-3 mt-2" style="background-color:#eff7f6;">
-            <p class="fs-5" style="color:#BA135D;">Trip Details</p>
+        <div class="rounded p-3 mt-2" style="background-color:#e9ecef;">
+            <p class="fs-5" style="color:#BA135D;">Bill Details</p>
             <form class="row g-3" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fieldset>
@@ -105,35 +84,21 @@
                 </fieldset>    
                 
                 <div class="col-md-4">    
-                    <label for="{{form.trip_id.id_for_label}}" class="form-label"><strong>Trip ID</strong></label>
-                    {% if form.trip_id.errors %}
-                        {% render_field form.trip_id class+='form-control is-invalid' %}
-                        {% for error in form.trip_id.errors %}
+                    <label for="{{form.date.id_for_label}}" class="form-label"><strong>Date</strong></label>
+                    {% if form.date.errors %}
+                        {% render_field form.date class+='form-control is-invalid' %}
+                        {% for error in form.date.errors %}
                             <div class="invalid-feedback">
                                 <strong>{{error}}</strong>
                             </div>
                         {% endfor %}
                     {% else %} 
-                        {% render_field form.trip_id class+='form-control' %}
+                        {% render_field form.date class+='form-control' %}
                     {% endif %}
                 </div>
 
                 <div class="col-md-4">    
-                    <label for="{{form.start_date.id_for_label}}" class="form-label"><strong>Start Date</strong></label>
-                    {% if form.start_date.errors %}
-                        {% render_field form.start_date class+='form-control is-invalid' %}
-                        {% for error in form.start_date.errors %}
-                            <div class="invalid-feedback">
-                                <strong>{{error}}</strong>
-                            </div>
-                        {% endfor %}
-                    {% else %} 
-                        {% render_field form.start_date class+='form-control' %}
-                    {% endif %}
-                </div>
-
-                <div class="col-md-4">    
-                    <label for="{{form.vehicle_number.id_for_label}}" class="form-label"><strong>Vehicle</strong></label>
+                    <label for="{{form.vehicle_number.id_for_label}}" class="form-label"><strong>Vehicle Number</strong></label>
                     {% if form.vehicle_number.errors %}
                         {% render_field form.vehicle_number class+='form-control is-invalid select2_widget' %}
                         {% for error in form.vehicle_number.errors %}
@@ -146,20 +111,6 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-8">    
-                    <label for="{{form.route.id_for_label}}" class="form-label"><strong>Trip Route</strong></label>
-                    {% if form.route.errors %}
-                        {% render_field form.route class+='form-control is-invalid select2_widget' %}
-                        {% for error in form.route.errors %}
-                            <div class="invalid-feedback">
-                                <strong>{{error}}</strong>
-                            </div>
-                        {% endfor %}
-                    {% else %} 
-                        {% render_field form.route class+='form-control select2_widget' %}
-                    {% endif %}
-                </div>
-                
                 <div class="col-md-4">    
                     <label for="{{form.driver.id_for_label}}" class="form-label"><strong>Driver</strong></label>
                     {% if form.driver.errors %}
@@ -174,73 +125,126 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-8">    
-                    <label for="{{form.product.id_for_label}}" class="form-label"><strong>Product</strong></label>
-                    {% if form.product.errors %}
-                        {% render_field form.product class+='form-control is-invalid' %}
-                        {% for error in form.product.errors %}
+                <div class="col-md-4">    
+                    <label for="{{form.station.id_for_label}}" class="form-label"><strong>Bunk Name</strong></label>
+                    {% if form.station.errors %}
+                        {% render_field form.station class+='form-control is-invalid' %}
+                        {% for error in form.station.errors %}
                             <div class="invalid-feedback">
                                 <strong>{{error}}</strong>
                             </div>
                         {% endfor %}
                     {% else %} 
-                        {% render_field form.product class+='form-control' placeholder+='Type for suggestions'  %}
+                        {% render_field form.station class+='form-control' %}
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-4">    
+                    <label for="{{form.quantity.id_for_label}}" class="form-label"><strong>Quantity</strong></label>
+                    {% if form.quantity.errors %}
+                        {% render_field form.quantity class+='form-control is-invalid' placeholder+='Litres' %}
+                        {% for error in form.quantity.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.quantity class+='form-control' placeholder+='Litres' %}
                     {% endif %}
                 </div>
 
                 <div class="col-md-4">    
-                    <label for="{{form.load.id_for_label}}" class="form-label"><strong>Product Weight</strong></label>
-                    {% if form.load.errors %}
-                        {% render_field form.load class+='form-control is-invalid' %}
-                        {% for error in form.load.errors %}
+                    <label for="{{form.rate.id_for_label}}" class="form-label"><strong>Rate per Litre</strong></label>
+                    {% if form.rate.errors %}
+                        {% render_field form.rate class+='form-control is-invalid' placeholder+='Rs' %}
+                        {% for error in form.rate.errors %}
                             <div class="invalid-feedback">
                                 <strong>{{error}}</strong>
                             </div>
                         {% endfor %}
                     {% else %} 
-                        {% render_field form.load class+='form-control' placeholder+='KG' %}
+                        {% render_field form.rate class+='form-control' placeholder+='Rs' %}
+                    {% endif %}
+                </div>
+                <div class="col-md-8">    
+                    <label for="{{form.bill.id_for_label}}" class="form-label"><strong>Invoice Proof</strong></label>
+                    {% if form.bill.errors %}
+                        {% render_field form.bill class+='form-control is-invalid'%}
+                        {% for error in form.bill.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.bill class+='form-control'%}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">    
+                    <label for="{{form.amount.id_for_label}}" class="form-label"><strong>Total Amount</strong></label>
+                    {% if form.amount.errors %}
+                        {% render_field form.amount class+='form-control is-invalid' placeholder+='Rs' %}
+                        {% for error in form.amount.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.amount class+='form-control' placeholder+='Rs' %}
                     {% endif %}
                 </div>
 
                 <div class="d-flex flex justify-content-center align-items-center">
-                    <button type="submit" class="btn btn-primary" style="width:10%;padding:5px;">Update</button>
+                    <button type="submit" class="btn btn-success" style="width:10%;padding:5px;">Add</button>
                 </div>    
             </form>
         </div>    
     </div>
 </div>
-{% endblock %}
-        
+
+{% endblock content %}
 
 {% block customjs %}
 
 <script>
     function typeahead_initialize(){
-        var product_names = new Bloodhound({
+        var station_names = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {
-                url: "{% url 'product_autocomplete' %}",
+                url: "{% url 'station_autocomplete' %}",
                 ttl: 5,
             }
         });
-        product_names.initialize();
+        station_names.initialize();
         
         $('.AutoComplete').typeahead({
             hint:true,
             highlight: true,
             minLength:1
         }, {
-            name: 'product_names',
-            source: product_names
+            name: 'station_names',
+            source: station_names
         }).on('.AutoComplete:selected', function(obj, value){
         });    
     }
 </script>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         typeahead_initialize();
+        
+        $('#id_quantity').on('change', function(){
+            $('#id_amount').val(
+                $('#id_quantity').val() * $('#id_rate').val()
+            );
+        });
+
+        $('#id_rate').on('change', function(){
+            $('#id_amount').val(
+                $('#id_quantity').val() * $('#id_rate').val()
+            );
+        });
     });
 </script>
 {% endblock customjs %}

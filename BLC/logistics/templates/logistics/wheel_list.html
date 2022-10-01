@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Vehicles{% endblock title %}
+{% block title %}Tyre Details{% endblock title %}
 
 {% block content %}
-<div class="modal fade" id="vehicle-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="wheel-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content"></div>
     </div>
@@ -25,49 +25,37 @@
 
     <div class="row">
         <div class="col-11 mx-3 my-0 align-middle">
-            <button id="create-vehicle" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Create Vehicle</button>
-            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="vehicle-list"/ style="float:right;width:300px;margin-left:auto;">  
+            {% if wheel_list|length == 0 %}
+                <a href="{% url 'wheel_create' vehicle_number.pk %}" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Add Tyre Details</a>
+            {% else %}
+                <a href="{% url 'wheel_edit' vehicle_number.pk %}" type="button" class="btn btn-primary btn-sm my-3" style="float:left;">Edit Tyre Details</a>
+            {% endif %}
+            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="tyre-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
     </div>
 
     <div class="row mt-1">
         <div class="col-11 mx-3">
-            <table class="table table-hover caption-top rounded vehicle-list">
-                <caption class="fs-3">VEHICLES</caption>
+            <table class="table table-hover caption-top rounded tyre-list">
+                <caption class="fs-3">Tyre Details for Vehicle - {{vehicle_number.vehicle_number}}</caption>
                 <thead class="text-grey" style="background-color:#9CB4CC">
                     <tr>
-                    <th scope="col"class="align-middle">Vehicle Number</th>
-                    <th scope="col"class="text-center align-middle">Purchase Date</th>
-                    <th scope="col"class="text-center align-middle">Axles</th>
-                    <th scope="col"class="text-center align-middle">Fuel Capacity</th>
-                    <th scope="col"class="text-center align-middle">Load Capacity</th>
-                    <th scope="col"class="text-center align-middle">Usage</th>
-                    <th scope="col"class="text-center align-middle">Edit</th>
-                    <th scope="col"class="text-center align-middle">Delete</th>
+                        <th scope="col"class="align-middle">Tyre Serial Number</th>
+                        <th scope="col"class="text-center align-middle">Installation Date</th>
+                        <th scope="col"class="text-center align-middle">Total Running Life</th>
+                        <th scope="col"class="text-center align-middle">Total Usage</th>
+                        <th scope="col"class="text-center align-middle">Remaining Life</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in vehicle_list %}
+                    {% for item in wheel_list %}
                     <tr>
-                        <td class="align-middle">{{item.vehicle_number}}</td>
+                        <td class="align-middle">{{item.serial_number}}</td>
                         <td class="text-center align-middle">{{item.purchase_date|date:'d M Y'}}</td>
-                        <td class="text-center align-middle">{{item.axle}} WL</td>
-                        <td class="text-center align-middle">{{item.fuel_capacity|floatformat:0}} Litres</td>
-                        <td class="text-center align-middle">{{item.load_capacity|floatformat:0}} Kg</td>
-                        <td class="align-middle text-center">    
-                            <a type="button" href="{% url 'wheel_list' item.pk %}">
-                                <span class="material-icons align-middle text-center text-warning">info</span>
-                            </a>
-                        </td>
-                        <td class="align-middle text-center">    
-                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_edit' item.pk %}">
-                                <span class="material-icons align-middle text-center">edit</span>
-                            </a>
-                        </td>
-                        <td class="align-middle text-center">
-                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_delete' item.pk %}">
-                                <span class="material-icons align-middle text-center text-danger">delete</span>
-                            </a>
+                        <td class="text-center align-middle">{{item.running_life|floatformat:0}} Kms</td>
+                        <td class="text-center align-middle">{{item.usage|floatformat:0}} Kms</td>
+                        <td class="text-center align-middle">
+                            <span class="badge rounded-pill bg-primary">{{item.usage|floatformat:0}} Kms</span>
                         </td>
                     </tr>
                     {% endfor %}
@@ -79,20 +67,12 @@
 {% endblock content %}
 
 {% block customjs %}
-<script type="text/javascript">
-    $(function() {
-        $('#create-vehicle').modalForm({
-            formURL: "{% url 'vehicle_create' %}",
-            modalID: '#vehicle-modal'
-        })
-    });
-</script>
 <script>
     $(function(){
         $(".bs-modal").each(function(){
             $(this).modalForm({
                 formURL: $(this).data('form-url'),
-                modalID: '#vehicle-modal'
+                modalID: '#wheel-modal'
             });
         });
     });

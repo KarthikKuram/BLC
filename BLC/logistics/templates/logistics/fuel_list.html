@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Vehicles{% endblock title %}
+{% block title %}Fuel Bills{% endblock title %}
 
 {% block content %}
-<div class="modal fade" id="vehicle-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="fuel-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content"></div>
     </div>
 </div>
 <div class="fade-in">
-    <div class="row mx-3 mb-3 mt-3">
+    <div class="row mx-2 mb-3 mt-3">
         {% comment %} <h4 class="">LIST OF CUSTOMERS</h4> {% endcomment %}
     </div>
     
     <div class="row">
-        <div class="col-6 mx-3 mb-1">
+        <div class="col-6 mx-2 mb-1">
             {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" id="message_container">
                     <strong>{{message}}</strong>
@@ -24,48 +24,45 @@
     </div>
 
     <div class="row">
-        <div class="col-11 mx-3 my-0 align-middle">
-            <button id="create-vehicle" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Create Vehicle</button>
-            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="vehicle-list"/ style="float:right;width:300px;margin-left:auto;">  
+        <div class="col-12 mx-2 my-0 align-middle">
+            <a type="button" class="btn btn-success btn-sm my-3" href="{% url 'fuel_create' %}">Add Fuel Bill</a>
+            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="fuel-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
     </div>
 
     <div class="row mt-1">
-        <div class="col-11 mx-3">
-            <table class="table table-hover caption-top rounded vehicle-list">
-                <caption class="fs-3">VEHICLES</caption>
-                <thead class="text-grey" style="background-color:#9CB4CC">
+        <div class="col-12 mx-2">
+            <table class="table table-hover caption-top rounded fuel-list">
+                <caption class="fs-3">Fuel Bills</caption>
+                <thead class="text-grey" style="background-color:#ade8f4">
                     <tr>
-                    <th scope="col"class="align-middle">Vehicle Number</th>
-                    <th scope="col"class="text-center align-middle">Purchase Date</th>
-                    <th scope="col"class="text-center align-middle">Axles</th>
-                    <th scope="col"class="text-center align-middle">Fuel Capacity</th>
-                    <th scope="col"class="text-center align-middle">Load Capacity</th>
-                    <th scope="col"class="text-center align-middle">Usage</th>
-                    <th scope="col"class="text-center align-middle">Edit</th>
-                    <th scope="col"class="text-center align-middle">Delete</th>
+                        <th scope="col"class="text-center align-middle">Date</th>
+                        <th scope="col"class="align-middle">Vehicle Number</th>
+                        <th scope="col"class="align-middle">Driver</th>
+                        <th scope="col"class="align-middle">Bunk Name</th>
+                        <th scope="col"class="text-center align-middle">Quantity</th>
+                        <th scope="col"class="text-center align-middle">Rate</th>
+                        <th scope="col"class="text-center align-middle">Amount</th>
+                        <th scope="col"class="text-center align-middle">Invoice</th>
+                        <th scope="col"class="text-center align-middle">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in vehicle_list %}
+                    {% for item in fuel_list %}
                     <tr>
-                        <td class="align-middle">{{item.vehicle_number}}</td>
-                        <td class="text-center align-middle">{{item.purchase_date|date:'d M Y'}}</td>
-                        <td class="text-center align-middle">{{item.axle}} WL</td>
-                        <td class="text-center align-middle">{{item.fuel_capacity|floatformat:0}} Litres</td>
-                        <td class="text-center align-middle">{{item.load_capacity|floatformat:0}} Kg</td>
+                        <td class="text-center align-middle">{{item.date}}</td>
+                        <td class="align-middle">{{item.vehicle_number.vehicle_number}}</td>
+                        <td class="align-middle">{{item.driver.full_name}}</td>
+                        <td class="align-middle">{{item.station}}</td>
+                        <td class="text-center align-middle">{{item.quantity}}</td>
+                        <td class="text-center align-middle">{{item.rate}}</td>
+                        <td class="text-center align-middle">{{item.amount}}</td>
+                        <td class="text-center align-middle"><a href={% if item.bill %}"{{item.bill.url}}"{% else %}"#"{% endif %}><img alt="Bill Not Found" width="75" height="75"  src={% if item.bill %}"{{item.bill.url}}"{% endif %}></img></a></td>
                         <td class="align-middle text-center">    
-                            <a type="button" href="{% url 'wheel_list' item.pk %}">
-                                <span class="material-icons align-middle text-center text-warning">info</span>
-                            </a>
-                        </td>
-                        <td class="align-middle text-center">    
-                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_edit' item.pk %}">
+                            <a type="button" href="{% url 'fuel_edit' item.pk %}">
                                 <span class="material-icons align-middle text-center">edit</span>
                             </a>
-                        </td>
-                        <td class="align-middle text-center">
-                            <a type="button" class="bs-modal" data-form-url="{% url 'vehicle_delete' item.pk %}">
+                            <a type="button" class="bs-modal" data-form-url="{% url 'fuel_delete' item.pk %}">
                                 <span class="material-icons align-middle text-center text-danger">delete</span>
                             </a>
                         </td>
@@ -79,20 +76,12 @@
 {% endblock content %}
 
 {% block customjs %}
-<script type="text/javascript">
-    $(function() {
-        $('#create-vehicle').modalForm({
-            formURL: "{% url 'vehicle_create' %}",
-            modalID: '#vehicle-modal'
-        })
-    });
-</script>
 <script>
     $(function(){
         $(".bs-modal").each(function(){
             $(this).modalForm({
                 formURL: $(this).data('form-url'),
-                modalID: '#vehicle-modal'
+                modalID: '#fuel-modal'
             });
         });
     });

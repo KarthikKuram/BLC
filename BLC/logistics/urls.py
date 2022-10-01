@@ -43,4 +43,14 @@ urlpatterns = [
     path('trip-close', views.TripCloseView.as_view(), name='trip_close'),
     path('product-autocomplete', views.get_product_listing, name='product_autocomplete'),
     path('get-available-vehicles', views.get_available_vehicles, name='get_available_vehicles'),
+    ### Fuel Url ###
+    path('fuel-list', views.FuelListView.as_view(), name='fuel_list'),
+    path('fuel-create', views.FuelCreateView.as_view(), name='fuel_create'),
+    path('fuel-edit/<int:pk>', views.FuelUpdateView.as_view(), name='fuel_edit'),
+    path('fuel-delete/<int:pk>', views.FuelDeleteView.as_view(), name='fuel_delete'),
+    path('station-autocomplete', views.get_station_listing, name='station_autocomplete'),
+    ### Wheels Url ###
+    path('wheel-list/<int:pk>', views.WheelListView.as_view(), name='wheel_list'),
+    path('wheel-create/<int:pk>', views.WheelCreateView.as_view(), name='wheel_create'),
+    path('wheel-edit/<int:pk>', views.WheelUpdateView.as_view(), name='wheel_edit'),
 ]

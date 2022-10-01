@@ -61,3 +61,22 @@ class TripCreateForm(forms.ModelForm):
             'product': forms.widgets.TextInput(attrs={'class': 'AutoComplete typeahead tt-query', 'autocomplete': 'off'}),
         }
         
+### Fuel Forms ###
+class FuelCreateForm(forms.ModelForm):
+    class Meta:
+        model = Fuel
+        fields = '__all__'
+        widgets = {
+            'date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'station': forms.widgets.TextInput(attrs={'class': 'AutoComplete typeahead tt-query', 'autocomplete': 'off'}),
+            # 'amount': forms.widgets.TextInput(attrs={'disabled': 'disabled'}),
+        }
+### Wheel Forms ###
+class WheelCreateForm(forms.ModelForm):
+    class Meta:
+        model = Wheel
+        fields = "__all__"
+        widgets = {
+            'purchase_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+        }
+        

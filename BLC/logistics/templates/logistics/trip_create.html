@@ -133,34 +133,6 @@
                 </div>
 
                 <div class="col-md-4">    
-                    <label for="{{form.customer.id_for_label}}" class="form-label"><strong>Source</strong></label>
-                    {% if form.customer.errors %}
-                        {% render_field form.customer class+='form-control is-invalid select2_widget' %}
-                        {% for error in form.customer.errors %}
-                            <div class="invalid-feedback">
-                                <strong>{{error}}</strong>
-                            </div>
-                        {% endfor %}
-                    {% else %} 
-                        {% render_field form.customer class+='form-control select2_widget' %}
-                    {% endif %}
-                </div>
-                
-                <div class="col-md-4">    
-                    <label for="{{form.destination.id_for_label}}" class="form-label"><strong>Destination</strong></label>
-                    {% if form.destination.errors %}
-                        {% render_field form.destination class+='form-control is-invalid select2_widget' %}
-                        {% for error in form.destination.errors %}
-                            <div class="invalid-feedback">
-                                <strong>{{error}}</strong>
-                            </div>
-                        {% endfor %}
-                    {% else %} 
-                        {% render_field form.destination class+='form-control select2_widget' %}
-                    {% endif %}
-                </div>
-                
-                <div class="col-md-4">    
                     <label for="{{form.vehicle_number.id_for_label}}" class="form-label"><strong>Vehicle</strong></label>
                     {% if form.vehicle_number.errors %}
                         {% render_field form.vehicle_number class+='form-control is-invalid select2_widget' %}
@@ -174,6 +146,20 @@
                     {% endif %}
                 </div>
 
+                <div class="col-md-8">    
+                    <label for="{{form.route.id_for_label}}" class="form-label"><strong>Trip Route</strong></label>
+                    {% if form.route.errors %}
+                        {% render_field form.route class+='form-control is-invalid select2_widget' %}
+                        {% for error in form.route.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.route class+='form-control select2_widget' %}
+                    {% endif %}
+                </div>
+                
                 <div class="col-md-4">    
                     <label for="{{form.driver.id_for_label}}" class="form-label"><strong>Driver</strong></label>
                     {% if form.driver.errors %}

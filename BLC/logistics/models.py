@@ -102,21 +102,31 @@ class Route(models.Model):
         verbose_name_plural = "Routes"
     
     def __str__(self):
-        return '%s to %s' % (self.customer, self.destination)
+        return '%s --->To---> %s' % (self.customer, self.destination)
 
 ### WHEEL USAGE MODEL ###
 class Wheel(models.Model):
-    vehicle_number = models.ForeignKey('logistics.Vehicle', on_delete=models.PROTECT, related_name='vehiclewheels')
-    serial_number = models.CharField(max_length=255, unique=True)
-    purchase_date = models.DateField()
-    running_life = models.IntegerField(validators=[MinValueValidator(1)])
+    vehicle_number = models.ForeignKey('logistics.Vehicle', on_delete=models.PROTECT, related_name='vehicle_wheels')
+    serial_number = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    purchase_date = models.DateField(blank=True, null=True)
+    running_life = models.IntegerField(validators=[MinValueValidator(1)],blank=True, null=True)
+    usage = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0)
     
     class Meta:
         verbose_name = "Wheel"
         verbose_name_plural = "Wheels"
         
     def __str__(self):
-        return self.serial_number    
+        return '%s || %s' % (self.vehicle_number, self.serial_number)    
+    
+    # @property
+    # def usage(self):
+    #     total_run=0
+    #     total_trips = self.vehicle_number.vehicle_trips.all()
+    #     for trip in total_trips:
+    #         total_run+=trip.route.distance
+    #     return total_run
+            
     
 ### VEHICLE MAINTENANCE MODEL ###
 class VehicleMaintenance(models.Model):
@@ -142,8 +152,7 @@ def increment_trip_number():
 
 class Trip(models.Model):
     trip_id = CICharField(max_length=50, blank=True, unique=True, default=increment_trip_number)
-    customer = models.ForeignKey('logistics.Customer', on_delete=models.PROTECT, related_name='customer_trips')
-    destination = models.ForeignKey('logistics.Destination', on_delete=models.PROTECT, related_name='destination_trips')
+    route = models.ForeignKey('logistics.Route', on_delete=models.PROTECT, related_name='trip_route')
     vehicle_number = models.ForeignKey('logistics.Vehicle',on_delete=models.PROTECT, related_name='vehicle_trips')    
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
@@ -158,7 +167,7 @@ class Trip(models.Model):
         verbose_name_plural = "Trips"
         
     def __str__(self):
-        return '%s || %s' % (self.trip_id, self.customer)    
+        return '%s || %s' % (self.trip_id, self.route)    
     
 ### FUEL MODEL ###
 class Fuel(models.Model):

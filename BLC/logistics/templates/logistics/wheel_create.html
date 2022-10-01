@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% load static %}
+{% block title %}Add Tyre Details{% endblock title %}
+
+{% block content %}
+<style>
+    .link-formset td {
+        padding:0;
+    }
+</style>
+<style>
+    .link-formset td input{
+        margin:0;
+    }
+</style>
+<div class="row">
+    <div class="col-12">
+        {% comment %} <h2 class="mx-5 mt-5 mb-3">Tyre Details</h2> {% endcomment %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 mx-5 mb-0">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" id = 'message_container'>
+                {{ message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+  <div class="col-12 mx-5 mb-0">
+    <form method="post" novalidate enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset>
+        {% if wheels_form.non_form_errors %}
+          {% for form in wheels_form.forms %}
+            {% if form.non_field_errors|length > 0 %}
+                <div class="alert alert-block alert-danger col-md-6 mb-2 p-0">
+                    {{form.non_field_errors}}
+                </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <table class="table table-hover table-bordered table-sm caption-top" style="width: 80%">
+            <caption class="fs-4">Tyre Details for Vehicle Number - {{vehicle_number.vehicle_number}}</caption>
+            {{ wheels_form.management_form|crispy }}
+            {% for form in wheels_form.forms %}
+                {% if form.non_field_errors|length > 0 %}
+                    <div class="alert alert-block alert-danger col-md-6 mb-2 p-0">
+                        {{form.non_field_errors}}
+                    </div>
+                {% endif %}
+                {{form.id}}
+                {% if forloop.first %}
+                    <thead class="text-white" style="background-color:#9b2226;">
+                        <tr>
+                            <th scope="col" class = 'align-middle'>Serial Number</th>
+                            <th scope="col" class = 'text-center align-middle'>Purchase Date</th>
+                            <th scope="col" class = 'text-center align-middle'>Running Life in Kms</th>
+                        </tr>
+                    </thead>
+                {% endif %}
+                <tr class="link-formset">
+                    <td style='padding:0px;'>
+                        {% if form.serial_number.errors %}
+                            {% render_field form.serial_number class+='form-control is-invalid' style+='padding:0px;'%}
+                            {% for error in form.serial_number.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% render_field form.serial_number class+='form-control' style+='padding:0px;'%}
+                        {% endif %}
+
+                        {% if forloop.first %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endif %}    
+                    </td>   
+
+                    <td style='padding:0px;'>
+                        {% if form.purchase_date.errors %}
+                            {% render_field form.purchase_date class+='form-control is-invalid' style+='padding:0px;'%}
+                            {% for error in form.purchase_date.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% render_field form.purchase_date class+='form-control' style+='padding:0px;'%}
+                        {% endif %}
+                        {% if forloop.first %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endif %}    
+                    </td>   
+
+                    <td style='padding:0px;'>
+                        {% if form.running_life.errors %}
+                            {% render_field form.running_life placeholder+='Kms' class+='form-control text-center is-invalid' style+='padding:0px;'%}
+                            {% for error in form.running_life.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% render_field form.running_life placeholder+='Kms' class+='form-control text-center' style+='padding:0px;'%}
+                        {% endif %}
+                        {% if forloop.first %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endif %}    
+                    </td>   
+                    <td class="text-center align-middle delete-hide">
+                        {% render_field form.DELETE type+='hidden' style+='padding:0px;'%}    
+                        {% if forloop.first %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        {% endif %}
+                    </td>   
+                </tr>
+          {% endfor %}  
+        </table>
+      </fieldset>
+      <button type="submit" class="btn btn-success">Save Details</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}
+{% block customjs %}
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+
+{% endblock customjs %}
