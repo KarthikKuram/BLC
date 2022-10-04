@@ -54,9 +54,32 @@
                         <td class="text-center align-middle">{{item.purchase_date|date:'d M Y'}}</td>
                         <td class="text-center align-middle">{{item.running_life|floatformat:0}} Kms</td>
                         <td class="text-center align-middle">{{item.usage|floatformat:0}} Kms</td>
-                        <td class="text-center align-middle">
-                            <span class="badge rounded-pill bg-primary">{{item.usage|floatformat:0}} Kms</span>
-                        </td>
+                        
+                        {% if item.remaining_life > 0 %}
+                            {% if item.remaining_life_percentage > 75 %}
+                                <td class="text-center align-middle">
+                                    <span class="badge rounded-pill bg-success">{{item.remaining_life}} Kms</span>
+                                    <span class="badge rounded-pill bg-success">{{item.remaining_life_percentage|floatformat:1}} %</span>
+                                </td>
+                            {% else %}
+                                {% if item.remaining_life_percentage > 25 and item.remaining_life_percentage <= 75 %}
+                                    <td class="text-center align-middle">
+                                        <span class="badge rounded-pill bg-info">{{item.remaining_life}} Kms</span>
+                                        <span class="badge rounded-pill bg-info">{{item.remaining_life_percentage}} %</span>
+                                    </td>
+                                {% else %}
+                                    <td class="text-center align-middle">
+                                        <span class="badge rounded-pill bg-danger">{{item.remaining_life}} Kms</span>
+                                        <span class="badge rounded-pill bg-danger">{{item.remaining_life_percentage}} %</span>
+                                    </td>
+                                
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <td class="text-center align-middle">
+                                <span class="badge rounded-pill bg-secondary">0 Kms</span>
+                            </td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>

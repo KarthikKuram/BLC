@@ -287,7 +287,7 @@ class TripCloseView(SuccessMessageMixin, LoginRequiredMixin, View):
                         
                         # Get Kms Travelled by Route
                         run_kms = trip.route.distance
-                        wheels = Wheel.objects.filter(vehicle_number=trip.vehicle_number)
+                        wheels = Wheel.objects.filter(~Q(serial_number=None), vehicle_number=trip.vehicle_number, purchase_date__lte=trip.start_date)
                         if wheels.exists():
                             for wheel in wheels:
                                 wheel.usage = F('usage') + run_kms
@@ -326,6 +326,7 @@ def get_available_vehicles(request):
     
 
 ### Fuel Views ###
+
 class FuelListView(LoginRequiredMixin, ListView):
     model = Fuel
     template_name = 'fuel_list.html'    
@@ -365,7 +366,9 @@ def get_station_listing(request):
     qs = list(Fuel.objects.values_list('station',flat=True).distinct())
     return JsonResponse(qs, safe = False)    
         
+        
 ### Wheel Views ###
+
 class WheelListView(LoginRequiredMixin, ListView):
     model = Wheel
         
@@ -441,3 +444,46 @@ class WheelUpdateView(LoginRequiredMixin, UpdateView):
             wheel.vehicle_number = self.vehicle
             wheel.save()
         return HttpResponseRedirect(reverse('vehicle_list'))
+    
+
+### Maintenance Views ###
+
+class MaintenanceListView(LoginRequiredMixin, ListView):
+    model = VehicleMaintenance
+    template_name = 'maintenance_list.html'    
+    
+class MaintenanceCreateView(LoginRequiredMixin, CreateView):
+    model = VehicleMaintenance
+    form_class = MaintenanceCreateForm
+    template_name = 'maintenance_create.html'    
+    success_url = reverse_lazy('maintenance_list')
+    success_message = "Maintenance Bill has been recorded successfully"
+
+class MaintenanceUpdateView(LoginRequiredMixin, UpdateView):
+    model = VehicleMaintenance
+    form_class = MaintenanceCreateForm
+    template_name = 'maintenance_edit.html'    
+    success_url = reverse_lazy('maintenance_list')
+    success_message = "Maintenance Bill has been edited successfully"
+    
+class MaintenanceDeleteView(LoginRequiredMixin, BSModalDeleteView):
+    model = VehicleMaintenance
+    template_name = 'maintenance_delete.html'
+    error_template = 'maintenance_list.html'
+    success_url = reverse_lazy('maintenance_list')
+    success_message = ""
+
+    def post(self, request, *args, **kwargs):
+        try:
+            post = self.delete(request, *args, **kwargs)
+            messages.success(request,"Maintenance Invoice has been deleted successfully",extra_tags='success')
+            return post
+        except ProtectedError:
+            messages.error(request,"You cannot delete this entry",extra_tags='danger')
+            return redirect('maintenance_list')
+
+@login_required    
+def get_maintenance_listing(request):
+    qs = list(VehicleMaintenance.objects.values_list('description',flat=True).distinct())
+    return JsonResponse(qs, safe = False)    
+    

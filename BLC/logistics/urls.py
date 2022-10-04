@@ -53,4 +53,10 @@ urlpatterns = [
     path('wheel-list/<int:pk>', views.WheelListView.as_view(), name='wheel_list'),
     path('wheel-create/<int:pk>', views.WheelCreateView.as_view(), name='wheel_create'),
     path('wheel-edit/<int:pk>', views.WheelUpdateView.as_view(), name='wheel_edit'),
+    ### Maintenance Url ###
+    path('maintenance-list', views.MaintenanceListView.as_view(), name='maintenance_list'),
+    path('maintenance-create', views.MaintenanceCreateView.as_view(), name='maintenance_create'),
+    path('maintenance-edit/<int:pk>', views.MaintenanceUpdateView.as_view(), name='maintenance_edit'),
+    path('maintenance-delete/<int:pk>', views.MaintenanceDeleteView.as_view(), name='maintenance_delete'),
+    path('maintenance-autocomplete', views.get_maintenance_listing, name='maintenance_autocomplete'),
 ]

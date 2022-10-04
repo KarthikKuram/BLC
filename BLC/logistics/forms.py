@@ -80,3 +80,27 @@ class WheelCreateForm(forms.ModelForm):
             'purchase_date': forms.widgets.DateInput(attrs={'type': 'date'}),
         }
         
+### Maintenance Forms ###
+class MaintenanceCreateForm(forms.ModelForm):
+    class Meta:
+        model = VehicleMaintenance
+        fields = '__all__'
+        widgets = {
+            'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'description': forms.widgets.TextInput(attrs={'class': 'AutoComplete typeahead tt-query', 'autocomplete': 'off'}),
+        }        
+    
+    def is_valid(self):
+        valid = super(MaintenanceCreateForm, self).is_valid()
+        
+        if not valid:
+            return valid
+        
+        if self.cleaned_data['end_date'] < self.cleaned_data['start_date']:
+            self._errors['end_date'] = self.error_class(['End Date cannot be earlier than Start Date'])
+            del self.cleaned_data['end_date']
+            return False
+        
+        return True
+        

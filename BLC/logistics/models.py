@@ -119,22 +119,23 @@ class Wheel(models.Model):
     def __str__(self):
         return '%s || %s' % (self.vehicle_number, self.serial_number)    
     
-    # @property
-    # def usage(self):
-    #     total_run=0
-    #     total_trips = self.vehicle_number.vehicle_trips.all()
-    #     for trip in total_trips:
-    #         total_run+=trip.route.distance
-    #     return total_run
-            
+    @property
+    def remaining_life(self):
+        return self.running_life - self.usage
+        
+    @property
+    def remaining_life_percentage(self):
+        return (self.running_life - self.usage)/self.running_life*100
+                    
     
 ### VEHICLE MAINTENANCE MODEL ###
 class VehicleMaintenance(models.Model):
     vehicle_number = models.ForeignKey('logistics.Vehicle', on_delete=models.PROTECT, related_name='vehicle_maintenance')
     start_date = models.DateField()    
     end_date = models.DateField()
-    description = models.TextField(max_length=255)
+    description = models.TextField(max_length=1000)
     amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    invoice = models.ImageField(blank=True, upload_to='maintenance_bills')
     
     class Meta:
         verbose_name = "VehicleMaintenance"

@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Routes{% endblock title %}
+{% block title %}Vehicle Maintenance{% endblock title %}
 
 {% block content %}
-<div class="modal fade" id="route-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="maintenance-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content"></div>
     </div>
 </div>
 <div class="fade-in">
-    <div class="row mx-3 mb-3 mt-3">
+    <div class="row mx-2 mb-3 mt-3">
         {% comment %} <h4 class="">LIST OF CUSTOMERS</h4> {% endcomment %}
     </div>
     
     <div class="row">
-        <div class="col-6 mx-3 mb-1">
+        <div class="col-6 mx-2 mb-1">
             {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert" id="message_container">
                     <strong>{{message}}</strong>
@@ -24,40 +24,41 @@
     </div>
 
     <div class="row">
-        <div class="col-11 mx-3 my-0 align-middle">
-            <button id="create-route" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Create Route</button>
-            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="route-list"/ style="float:right;width:300px;margin-left:auto;">  
+        <div class="col-12 mx-2 my-0 align-middle">
+            <a type="button" class="btn btn-success btn-sm my-3" href="{% url 'maintenance_create' %}">Add Maintenance</a>
+            <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="maintenance-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
     </div>
 
     <div class="row mt-1">
-        <div class="col-11 mx-3">
-            <table class="table table-hover caption-top rounded route-list">
-                <caption class="fs-3">ROUTES</caption>
-                <thead class="text-grey" style="background-color:#9CB4CC">
+        <div class="col-12 mx-2">
+            <table class="table table-hover caption-top rounded maintenance-list">
+                <caption class="fs-3">Vehicle Maintenance</caption>
+                <thead class="text-grey" style="background-color:#ade8f4">
                     <tr>
-                    <th scope="col"class="align-middle">Source</th>
-                    <th scope="col"class="align-middle">Destination</th>
-                    <th scope="col"class="text-center align-middle">Distance</th>
-                    <th scope="col"class="text-center align-middle">Fuel Allowance</th>
-                    <th scope="col"class="text-center align-middle">Edit</th>
-                    <th scope="col"class="text-center align-middle">Delete</th>
+                        <th scope="col"class="align-middle">Vehicle Number</th>
+                        <th scope="col"class="text-center align-middle">Start Date</th>
+                        <th scope="col"class="text-center align-middle">End Date</th>
+                        <th scope="col"class="align-middle">Maitenance Description</th>
+                        <th scope="col"class="text-center align-middle">Amount</th>
+                        <th scope="col"class="text-center align-middle">Invoice</th>
+                        <th scope="col"class="text-center align-middle">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in route_list %}
+                    {% for item in vehiclemaintenance_list %}
                     <tr>
-                        <td class="align-middle">{{item.customer.name}}</td>
-                        <td class="align-middle">{{item.destination.name}}</td>
-                        <td class="text-center align-middle">{{item.distance}} KM</td>
-                        <td class="text-center align-middle">{{item.fuel_required|floatformat:0}} Litres</td>
+                        <td class="align-middle">{{item.vehicle_number.vehicle_number}}</td>
+                        <td class="text-center align-middle">{{item.start_date}}</td>
+                        <td class="text-center align-middle">{{item.end_date}}</td>
+                        <td class="align-middle">{{item.description}}</td>
+                        <td class="text-center align-middle">{{item.amount}}</td>
+                        <td class="text-center align-middle"><a href={% if item.invoice %}"{{item.invoice.url}}"{% else %}"#"{% endif %}><img alt="Invoice Not Found" width="75" height="75"  src={% if item.invoice %}"{{item.invoice.url}}"{% endif %}></img></a></td>
                         <td class="align-middle text-center">    
-                            <a type="button" class="bs-modal" data-form-url="{% url 'route_edit' item.pk %}">
+                            <a type="button" href="{% url 'maintenance_edit' item.pk %}">
                                 <span class="material-icons align-middle text-center">edit</span>
                             </a>
-                        </td>
-                        <td class="align-middle text-center">
-                            <a type="button" class="bs-modal" data-form-url="{% url 'route_delete' item.pk %}">
+                            <a type="button" class="bs-modal" data-form-url="{% url 'maintenance_delete' item.pk %}">
                                 <span class="material-icons align-middle text-center text-danger">delete</span>
                             </a>
                         </td>
@@ -71,20 +72,12 @@
 {% endblock content %}
 
 {% block customjs %}
-<script type="text/javascript">
-    $(function() {
-        $('#create-route').modalForm({
-            formURL: "{% url 'route_create' %}",
-            modalID: '#route-modal'
-        })
-    });
-</script>
 <script>
     $(function(){
         $(".bs-modal").each(function(){
             $(this).modalForm({
                 formURL: $(this).data('form-url'),
-                modalID: '#route-modal'
+                modalID: '#maintenance-modal'
             });
         });
     });
