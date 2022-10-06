@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator
 from decimal import *
@@ -153,6 +154,7 @@ def increment_trip_number():
 
 class Trip(models.Model):
     trip_id = CICharField(max_length=50, blank=True, unique=True, default=increment_trip_number)
+    shipment_no = models.CharField(max_length=255)
     route = models.ForeignKey('logistics.Route', on_delete=models.PROTECT, related_name='trip_route')
     vehicle_number = models.ForeignKey('logistics.Vehicle',on_delete=models.PROTECT, related_name='vehicle_trips')    
     start_date = models.DateField()
@@ -160,6 +162,9 @@ class Trip(models.Model):
     driver = models.ForeignKey('logistics.Driver', on_delete=models.PROTECT, related_name='driver_trips')
     product = models.CharField(max_length=255)
     load = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    eway_bill = models.ImageField(blank=True, upload_to='eway_bills')
+    driver_advance = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    fuel_advance = models.IntegerField(validators=[MinValueValidator(0)], default=0)
     message_id = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
     complete = models.BooleanField(default=False)
     
@@ -187,3 +192,23 @@ class Fuel(models.Model):
         
     def __str__(self):
         return self.date + " || " + self.station + " || " + str(self.quantity)
+    
+### TRIP EXPENSE MODEL ###
+class TripAmount(models.Model):
+    trip_id = models.ForeignKey('logistics.Trip',on_delete=models.CASCADE, related_name='trip_amounts')
+    freight_rate = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    freight_amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    driver_payment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0.0)
+    loading_payment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0.0)
+    unloading_payment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0.0)
+    rto_payment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0.0)
+    toll_charges = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0.0)
+    other_charges = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], default=0.0)
+    
+    class Meta:
+        verbose_name = "TripAmount"
+        verbose_name_plural = "TripAmounts"
+    
+    def __str__(self):
+        return self.trip_id
+            

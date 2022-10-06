@@ -7,16 +7,16 @@
     <div class="col-12">
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid #e5e5e5;">On-Going Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-warning mx-2"  aria-current="page" href="{% url 'completed_trip_list' %}">Completed Trips</a>
+                <a type="button" class="btn mx-2 text-dark fw-bold" style="background-color:#e9c46a;" aria-current="page" href="{% url 'completed_trip_list' %}">Completed Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid #e5e5e5;">Log New Trip</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_pending' %}" style="border:1px solid #e5e5e5;">Close Trip</a>
             </li>
         </ul>
     </div>    
@@ -46,30 +46,36 @@
     <div class="row mt-1">
         <div class="col-12 mx-2">
             <table class="table table-hover caption-top rounded trip-list">
-                <caption class="fs-3">COMPLETED TRIPS</caption>
-                <thead class="text-grey" style="background-color:#ade8f4">
+                <caption class="fs-3">Completed Trips</caption>
+                <thead class="text-white" style="background-color:#2a9d8f;">
                     <tr>
                         <th scope="col"class="align-middle">Trip ID</th>
+                        <th scope="col"class="align-middle">Shipment</th>
                         <th scope="col"class="text-center align-middle">Start Date</th>
                         <th scope="col"class="text-center align-middle">Completed Date</th>
                         <th scope="col"class="text-center align-middle">Source</th>
                         <th scope="col"class="text-center align-middle">Destination</th>
                         <th scope="col"class="text-center align-middle">Vehicle</th>
                         <th scope="col"class="text-center align-middle">Driver</th>
-                        <th scope="col"class="text-center align-middle">Product</th>
+                        <th scope="col"class="text-center align-middle">Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in trip_list %}
                     <tr>
                         <td class="align-middle">{{item.trip_id}}</td>
+                        <td class="align-middle">{{item.shipment_no}}</td>
                         <td class="text-center align-middle">{{item.start_date|date:'d M Y'}}</td>
                         <td class="text-center align-middle">{{item.end_date|date:'d M Y'}}</td>
                         <td class="text-center align-middle">{{item.route.customer.name}}</td>
                         <td class="text-center align-middle">{{item.route.destination.name}}</td>
                         <td class="text-center align-middle">{{item.vehicle_number.vehicle_number}}</td>
                         <td class="text-center align-middle">{{item.driver.full_name}}</td>
-                        <td class="text-center align-middle">{{item.product}}</td>
+                        <td class="text-center align-middle">
+                            <a type="button" href="{% url 'trip_details' item.pk %}">
+                                <span class="material-icons align-middle text-center fw-bold" style="color:#f4a261;">info</span>
+                            </a>    
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

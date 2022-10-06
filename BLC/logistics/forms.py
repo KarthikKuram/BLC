@@ -1,5 +1,5 @@
 from django import forms
-from .models import Customer, Destination, Driver, Vehicle, Wheel, Route, VehicleMaintenance, Trip, Fuel
+from .models import Customer, Destination, Driver, Vehicle, Wheel, Route, VehicleMaintenance, Trip, Fuel,TripAmount
 from bootstrap_modal_forms.forms import BSModalModelForm
 
 
@@ -103,4 +103,16 @@ class MaintenanceCreateForm(forms.ModelForm):
             return False
         
         return True
+    
+### Trip Amounts Form ###
+class TripAmountForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        trip_id = kwargs.pop('trip_id')
+        super(TripAmountForm, self).__init__(*args, **kwargs)
+        self.fields['trip_id'].queryset = Trip.objects.filter(id=trip_id)
+    class Meta:
+        model = TripAmount
+        fields = '__all__'
+        
         

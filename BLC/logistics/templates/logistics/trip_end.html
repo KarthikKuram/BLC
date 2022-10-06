@@ -1,17 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}On-Going Trips{% endblock title %}
+{% load widget_tweaks %}
+{% block title %}End Trips{% endblock title %}
 
 {% block content %}
-<div class="modal fade" id="trip-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content"></div>
-    </div>
-</div>
 <div class="row mt-1">
     <div class="col-12">
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a type="button" class="btn mx-2 text-dark fw-bold" style="background-color:#e9c46a;" aria-current="page" href="{% url 'ongoing_trip_list' %}">On-Going Trips</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid #e5e5e5;">On-Going Trips</a>
             </li>
             <li class="nav-item">
                 <a type="button" class="btn btn-light mx-2" href="{% url 'completed_trip_list' %}" style="border:1px solid #e5e5e5;">Completed Trips</a>
@@ -20,7 +16,7 @@
                 <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid #e5e5e5;">Log New Trip</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_pending' %}" style="border:1px solid #e5e5e5;">Close Trip</a>
+                <a type="button" class="btn mx-2 text-dark fw-bold" style="background-color:#e9c46a;" aria-current="page" href="{% url 'trip_pending' %}">Close Trip</a>
             </li>
         </ul>
     </div>    
@@ -46,12 +42,12 @@
             <input type="search" placeholder="Search..." class="form-control search-input my-1" data-table="trip-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
     </div>
-
+    
     <div class="row mt-1">
         <div class="col-12 mx-2">
             <table class="table table-hover caption-top rounded trip-list">
-                <caption class="fs-3">On-Going Trips</caption>
-                <thead class="text-white" style="background-color:#2a9d8f;">
+                <caption class="fs-3">End Completed Trips</caption>
+                <thead class="text-white" style="background-color:#2a9d8f">
                     <tr>
                         <th scope="col"class="align-middle">Trip ID</th>
                         <th scope="col"class="align-middle">Shipment</th>
@@ -64,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in trip_list %}
+                    {% for item in data %}
                     <tr>
                         <td class="align-middle">{{item.trip_id}}</td>
                         <td class="align-middle">{{item.shipment_no}}</td>
@@ -74,15 +70,9 @@
                         <td class="text-center align-middle">{{item.vehicle_number.vehicle_number}}</td>
                         <td class="text-center align-middle">{{item.driver.full_name}}</td>
                         <td class="align-middle text-center">
-                            <a type="button" href="{% url 'trip_details' item.pk %}">
-                                <span class="material-icons align-middle text-center fw-bold" style="color:#f4a261;">info</span>
+                            <a type="button" href="{% url 'trip_end' item.pk %}">
+                                <span class="material-icons align-middle text-center fw-bold">checklist</span>
                             </a>    
-                            <a type="button" href="{% url 'trip_edit' item.pk %}">
-                                <span class="material-icons align-middle text-center fw-bold" style="color:#e9c46a;">edit</span>
-                            </a>
-                            <a type="button" class="bs-modal" data-form-url="{% url 'trip_delete' item.pk %}">
-                                <span class="material-icons align-middle text-center fw-bold" style="color:#e76f51;">delete</span>
-                            </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -100,18 +90,6 @@
         message_ele.style.display = "none";
     }, 6000);
 </script>
-
-<script>
-    $(function(){
-        $(".bs-modal").each(function(){
-            $(this).modalForm({
-                formURL: $(this).data('form-url'),
-                modalID: '#trip-modal'
-            });
-        });
-    });
-</script>
-
 
 <script>
     (function(document) {

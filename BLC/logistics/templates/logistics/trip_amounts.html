@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Close Trip{% endblock title %}
+
+{% block content %}
+
+<style>
+    .typeahead, .tt-query, .tt-hint {
+	font-size: 1rem; /* Set input font size */
+	}
+    .twitter-typeahead{
+        padding: 0px !important;
+        display: block !important;
+        
+    }
+    .typeahead {
+        background-color: #FFFFFF;
+    }
+    .typeahead:focus {
+        border: 2px solid #0097CF;
+    }
+    .tt-query {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    }
+    .tt-hint {
+        color: #999999;
+    }
+    .tt-menu {
+        background-color: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        margin-top: 12px;
+        padding: 8px 0;
+        width: 422px;
+    }
+    .tt-suggestion {
+        font-size: 16px;  /* Set suggestion dropdown font size */
+        padding: 3px 20px;
+    }
+    .tt-suggestion:hover {
+        cursor: pointer;
+        background-color: #0097CF;
+        color: #FFFFFF;
+    }
+    .tt-suggestion p {
+        margin: 0;
+    }
+</style>
+
+<div class="row mt-1">
+    <div class="col-12">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid #e5e5e5;">On-Going Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid #e5e5e5;">Completed Trips</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_create' %}" style="border:1px solid #e5e5e5;">Log New Trip</a>
+            </li>
+            <li class="nav-item">
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid #e5e5e5;">Close Trip</a>
+            </li>
+        </ul>
+    </div>    
+    <div class="col-11 mx-3">
+        <hr style="height:2px;">
+    </div>
+</div>    
+<div class="fade-in">
+    <div class="row">
+        <div class="col-6">
+            <h4 class="mx-3 mt-2 mb-2 text-muted">Provide Trip Amounts</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 mx-3 mb-0">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" id = 'message_container'>
+                    <strong>{{ message}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 mx-3 mb-0 mt-2">
+        <div class="rounded p-3 mt-2" style="background-color:#fdfdff;opacity:1;border:2px solid #e5e5e5;">
+            {% comment %} <p class="fs-5" style="color:#BA135D;">Provide Trip Amounts</p> {% endcomment %}
+            <form class="row g-2" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-block alert-danger invalid">
+                            {{form.non_field_errors}}
+                        </div>
+                    {% endif %}
+                </fieldset>    
+                
+                <div class="row mb-3">    
+                    <label for="{{form.trip_id.id_for_label}}" class="col-4 col-form-label"><strong>Trip ID</strong></label>
+                    <div class="col-8">
+                        {% if form.trip_id.errors %}
+                            {% render_field form.trip_id class+='form-control is-invalid select2_widget' %}
+                            {% for error in form.trip_id.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.trip_id class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.freight_rate.id_for_label}}" class="col-4 col-form-label"><strong>Freight Rate</strong></label>
+                    <div class="col-8">
+                        {% if form.freight_rate.errors %}
+                            {% render_field form.freight_rate class+='form-control is-invalid'%}
+                            {% for error in form.freight_rate.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.freight_rate class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row mb-3">    
+                    <label for="{{form.freight_amount.id_for_label}}" class="col-4 col-form-label"><strong>Total Freight</strong></label>
+                    <div class="col-8">
+                        {% if form.freight_amount.errors %}
+                            {% render_field form.freight_amount class+='form-control is-invalid'%}
+                            {% for error in form.freight_amount.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.freight_amount class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.driver_payment.id_for_label}}" class="col-4 col-form-label"><strong>Driver Salary</strong></label>
+                    <div class="col-8">
+                        {% if form.driver_payment.errors %}
+                            {% render_field form.driver_payment class+='form-control is-invalid'%}
+                            {% for error in form.driver_payment.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.driver_payment class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.loading_payment.id_for_label}}" class="col-4 col-form-label"><strong>Loading Charges</strong></label>
+                    <div class="col-8">
+                        {% if form.loading_payment.errors %}
+                            {% render_field form.loading_payment class+='form-control is-invalid'%}
+                            {% for error in form.loading_payment.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.loading_payment class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.unloading_payment.id_for_label}}" class="col-4 col-form-label"><strong>UnLoading Charges</strong></label>
+                    <div class="col-8">
+                        {% if form.unloading_payment.errors %}
+                            {% render_field form.unloading_payment class+='form-control is-invalid'%}
+                            {% for error in form.unloading_payment.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.unloading_payment class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.rto_payment.id_for_label}}" class="col-4 col-form-label"><strong>RTO Charges</strong></label>
+                    <div class="col-8">
+                        {% if form.rto_payment.errors %}
+                            {% render_field form.rto_payment class+='form-control is-invalid'%}
+                            {% for error in form.rto_payment.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.rto_payment class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.toll_charges.id_for_label}}" class="col-4 col-form-label"><strong>FAST Tag</strong></label>
+                    <div class="col-8">
+                        {% if form.toll_charges.errors %}
+                            {% render_field form.toll_charges class+='form-control is-invalid'%}
+                            {% for error in form.toll_charges.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.toll_charges class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">    
+                    <label for="{{form.other_charges.id_for_label}}" class="col-4 col-form-label"><strong>Others</strong></label>
+                    <div class="col-8">
+                        {% if form.other_charges.errors %}
+                            {% render_field form.other_charges class+='form-control is-invalid'%}
+                            {% for error in form.other_charges.errors %}
+                                <div class="invalid-feedback">
+                                    <strong>{{error}}</strong>
+                                </div>
+                            {% endfor %}
+                        {% else %} 
+                            {% render_field form.other_charges class+='form-control' %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">    
+                    <label class="col-4 col-form-label"><strong>Close Trip ?</strong></label>
+                    <div class="col-8">
+                        <input class="form-check-input complete_track" type="checkbox" value="1" name="closed" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">    
+                    <label class="col-4 col-form-label"><strong>Trip End Date</strong></label>
+                    <div class="col-8">
+                        <span class="col-12 d-inline-block" tabindex="0"  data-toggle="tooltip" data-placement="top" title="Check Close Trip to Activate" >
+                            <input class="col-4 form-control end_date bg-light" type="date" name="enddate" required>
+                        </span>    
+                    </div>
+                </div>
+
+                <div class="d-flex flex justify-content-center align-items-center">
+                    <button type="submit" class="btn text-white" style="width:20%;padding:5px;background-color:#264653">End Trip</button>
+                </div>    
+            </form>
+        </div>    
+    </div>
+</div>
+{% endblock %}
+        
+
+{% block customjs %}
+
+<script>
+    var message_ele = document.getElementById("message_container");
+    setTimeout(function(){
+        message_ele.style.display = "none";
+    }, 6000);
+</script>
+
+<script>
+    $(document).ready(function(){
+        $("#id_trip_id").prop("selectedIndex", 1);
+
+        $('.end_date').prop('disabled', true);
+
+        $('.complete_track').click(function(){
+            $this =$(this)
+            $input = $('input.end_date')
+            $tool = $('span.d-inline-block')
+            if (this.checked) {
+                $input.prop('disabled', false);
+                $tool.tooltip('disable');
+                $input.select();
+            } else if(!this.checked){
+                $input.val('');
+                $input.prop('disabled', true);
+                $tool.tooltip('enable');
+            }
+        });
+    });
+</script>
+{% endblock customjs %}

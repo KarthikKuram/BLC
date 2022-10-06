@@ -13,8 +13,8 @@
 
 <style>
     .offcanvas{
-        background: #FDFAF6;
-        {% comment %} background: linear-gradient(0deg, #2c5364, #203a43, #0f2027); {% endcomment %}
+        background: #fdfdff
+        {% comment %} background: linear-gradient(0deg, #2c5364, #203a43, #0f2027); FDFAF6,#e5e5e5;{% endcomment %}
     }
 </style>
 
@@ -24,7 +24,7 @@
             <ul class="navbar-nav">                
                 <li>
                     <div class="menuname flex d-flex px-3 mt-3 bordered rounded">
-                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#065a82;">
                             DASHBOARD
                         </div>
                         <a href="#collapsedashboard" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsedashboard" style="color: #455a64;float:right;margin-left:auto;">
@@ -35,14 +35,8 @@
                 <div class="collapse show" id="collapsedashboard">                    
                     <li>
                         <a href="{% url 'dashboard' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">analytics</span>
+                            <span class="material-icons align-middle me-2" style="color: #6f1d1b">analytics</span>
                             <span class="align-middle" style="font-size: 14px">Operations</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'dashboard' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">analytics</span>
-                            <span class="align-middle" style="font-size: 14px">Vehicles</span>
                         </a>
                     </li>
                 </div> 
@@ -51,7 +45,7 @@
                 </li>                        
                 <li>
                     <div class="menuname flex d-flex px-3 mt-1 bordered rounded">
-                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#065a82;">
                             MASTER DATA
                         </div>
                         <a href="#collapsemasterdata" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsemasterdata" style="color: #455a64;float:right;margin-left:auto;">
@@ -62,31 +56,31 @@
                 <div class="collapse show" id="collapsemasterdata">                    
                     <li>
                         <a href="{% url 'customer_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">groups</span>
+                            <span class="material-icons align-middle me-2" style="color: #0077b6">groups</span>
                             <span class="align-middle" style="font-size: 14px">Customers</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'destination_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">warehouse</span>
+                            <span class="material-icons align-middle me-2" style="color: #0077b6">warehouse</span>
                             <span class="align-middle" style="font-size: 14px">Destinations</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'vehicle_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">local_shipping</span>
+                            <span class="material-icons align-middle me-2" style="color: #0077b6">local_shipping</span>
                             <span class="align-middle" style="font-size: 14px">Vehicles</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'driver_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">person</span>
+                            <span class="material-icons align-middle me-2" style="color: #0077b6">person</span>
                             <span class="align-middle" style="font-size: 14px">Drivers</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'route_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">map</span>
+                            <span class="material-icons align-middle me-2" style="color: #0077b6">map</span>
                             <span class="align-middle" style="font-size: 14px">Routes</span>
                         </a>
                     </li>
@@ -96,7 +90,7 @@
                 </li>                        
                 <li>
                     <div class="menuname flex d-flex px-3 mt-1 bordered rounded">
-                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#065a82;">
                             OPERATIONS
                         </div>
                         <a href="#collapseoperations" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapseoperations" style="color: #455a64;float:right;margin-left:auto;">
@@ -107,19 +101,19 @@
                 <div class="collapse show" id="collapseoperations">                    
                     <li>
                         <a href="{% url 'ongoing_trip_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">airport_shuttle</span>
+                            <span class="material-icons align-middle me-2" style="color: #b56576">airport_shuttle</span>
                             <span class="align-middle" style="font-size: 14px">Trips</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'fuel_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">local_gas_station</span>
+                            <span class="material-icons align-middle me-2" style="color: #b56576">local_gas_station</span>
                             <span class="align-middle" style="font-size: 14px">Fuel</span>
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'maintenance_list' %}" class="nav-link px-3">
-                            <span class="material-icons align-middle me-2" style="color: #455a64">engineering</span>
+                            <span class="material-icons align-middle me-2" style="color: #b56576">engineering</span>
                             <span class="align-middle" style="font-size: 14px">Maintenance</span>
                         </a>
                     </li>
@@ -129,10 +123,10 @@
                 </li>                        
                 <li>
                     <div class="menuname flex d-flex px-3 mt-1 bordered rounded">
-                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#005f73;">
+                        <div class="text-uppercase fw-bold small align-middle" style="display:inline-block;color:#065a82;">
                             REPORTS
                         </div>
-                        <a href="#collapsereports" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsereports" style="color: #455a64;float:right;margin-left:auto;">
+                        <a href="#collapsereports" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapsereports" style="color: #414535;float:right;margin-left:auto;">
                             <span class="material-icons align-middle" style="color: #455a64;float:right;margin-left:auto;">arrow_drop_down</span>
                         </a>
                     </div>    

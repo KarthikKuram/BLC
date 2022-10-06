@@ -40,6 +40,7 @@ urlpatterns = [
     path('trip-delete/<int:pk>', views.TripDeleteView.as_view(), name='trip_delete'),
     path('trip-details/<int:pk>', views.TripDetailView.as_view(), name='trip_details'),
     path('trip-pending', views.TripPendingListView, name='trip_pending'),
+    path('trip-end/<int:pk>', views.TripEndView, name='trip_end'),
     path('trip-close', views.TripCloseView.as_view(), name='trip_close'),
     path('product-autocomplete', views.get_product_listing, name='product_autocomplete'),
     path('get-available-vehicles', views.get_available_vehicles, name='get_available_vehicles'),

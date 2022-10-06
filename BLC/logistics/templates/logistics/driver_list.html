@@ -25,7 +25,7 @@
 
     <div class="row">
         <div class="col-11 mx-3 my-0 align-middle">
-            <button id="create-driver" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Create Driver</button>
+            <button id="create-driver" type="button" class="btn btn-sm my-3 text-white" style="float:left;background-color:#264653;">Create Driver</button>
             <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="driver-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="col-11 mx-3">
             <table class="table table-hover caption-top rounded driver-list">
                 <caption class="fs-3">Drivers</caption>
-                <thead class="text-grey" style="background-color:#9CB4CC">
+                <thead class="text-white" style="background-color:#2a9d8f">
                     <tr>
                     <th scope="col"class="align-middle">Driver Name</th>
                     <th scope="col"class="text-center align-middle">Mobile Number</th>
@@ -49,12 +49,12 @@
                         <td class="text-center align-middle">{{item.contact}}</td>
                         <td class="align-middle text-center">    
                             <a type="button" class="bs-modal" data-form-url="{% url 'driver_edit' item.pk %}">
-                                <span class="material-icons align-middle text-center">edit</span>
+                                <span class="material-icons align-middle text-center fw-bold" style="color:#e9c46a;">edit</span>
                             </a>
                         </td>
                         <td class="align-middle text-center">
                             <a type="button" class="bs-modal" data-form-url="{% url 'driver_delete' item.pk %}">
-                                <span class="material-icons align-middle text-center text-danger">delete</span>
+                                <span class="material-icons align-middle text-center fw-bold" style="color:#e76f51;">delete</span>
                             </a>
                         </td>
                     </tr>

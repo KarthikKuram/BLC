@@ -2,6 +2,8 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
+{% load indian_numbers_tags %}
+{% load humanize %}
 {% load static %}
 
 {% block title %}Trip Details{% endblock title %}
@@ -12,16 +14,16 @@
     <div class="col-12">
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid #e5e5e5;">On-Going Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid #e5e5e5;">Completed Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_create' %}" style="border:1px solid #e5e5e5;">Log New Trip</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid #e5e5e5;">Close Trip</a>
             </li>
         </ul>
     </div>    
@@ -36,44 +38,62 @@
         </div>
     </div>
 
-    <div class="col-12 col-md-9 mx-3 mb-0 mt-2">
-        <div class="rounded p-3 mt-2" style="background-color:#f5ebe0;">
+    <div class="col-12 col-md-11 mx-3 mb-0 mt-2">
+        <div class="rounded p-3 mt-2" style="background-color:#fdfdff;opacity:1;border:2px solid #e5e5e5;;">
             <div class="row g-3">
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label class="form-label"><strong>Trip ID</strong></label>
                     <p class="form-control">{{trip.trip_id}}</p>
                 </div>
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label class="form-label"><strong>Start Date</strong></label>
                     <p class="form-control">{{trip.start_date|date:'d M Y'}}</p>
                 </div>
-                <div class="col-md-4">    
-                    <label class="form-label"><strong>Source</strong></label>
-                    <p class="form-control">{{trip.route.customer.name}}</p>
+                <div class="col-md-3">    
+                    <label class="form-label"><strong>Shipment Number</strong></label>
+                    <p class="form-control">{{trip.shipment_no}}</p>
                 </div>
-                <div class="col-md-4">    
-                    <label class="form-label"><strong>Destination</strong></label>
-                    <p class="form-control">{{trip.route.destination.name}}</p>
-                </div>
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label class="form-label"><strong>Vehicle Number</strong></label>
                     <p class="form-control">{{trip.vehicle_number.vehicle_number}}</p>
                 </div>
-                <div class="col-md-4">    
+                <div class="col-md-6">    
+                    <label class="form-label"><strong>Route</strong></label>
+                    <p class="form-control">{{trip.route}}</p>
+                </div>  
+                <div class="col-md-3">    
                     <label class="form-label"><strong>Driver</strong></label>
                     <p class="form-control">{{trip.driver.full_name}}</p>
                 </div>
-                <div class="col-md-8">    
+                <div class="col-md-3">    
                     <label class="form-label"><strong>Product</strong></label>
                     <p class="form-control">{{trip.product}}</p>
                 </div>
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label class="form-label"><strong>Product Weight</strong></label>
-                    <p class="form-control">{{trip.load}} Kg</p>
+                    <p class="form-control">{{trip.load}} MT</p>
+                </div>
+                <div class="col-md-3">    
+                    <label class="form-label"><strong>Eway Bill</strong></label>
+                    <p class="form-control">
+                        {% if trip.eway_bill %}
+                            <a href="{{trip.eway_bill.url}}">View</a>
+                        {% else %}
+                            No File Associated
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-3">    
+                    <label class="form-label"><strong>Driver Advance</strong></label>
+                    <p class="form-control">Rs {{trip.driver_advance|intcomma_indian}}</p>
+                </div>
+                <div class="col-md-3">    
+                    <label class="form-label"><strong>Fuel Advance</strong></label>
+                    <p class="form-control">Rs {{trip.fuel_advance|intcomma_indian}}</p>
                 </div>
                 
                 <div class="d-flex flex justify-content-center align-items-center">
-                    <a href="{% url 'ongoing_trip_list' %}" type="submit" class="btn btn-secondary" style="width:10%;padding:5px;">Back</a>
+                    <a href="{% url 'ongoing_trip_list' %}" type="submit" class="btn text-white" style="width:10%;padding:5px;background-color:#264653;">Back</a>
                 </div>    
             </div>
         </div>    

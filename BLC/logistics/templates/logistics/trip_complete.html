@@ -7,16 +7,16 @@
     <div class="col-12">
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'ongoing_trip_list' %}" style="border:1px solid #e5e5e5;">On-Going Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'completed_trip_list' %}" style="border:1px solid #e5e5e5;">Completed Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid black;">Log New Trip</a>
+                <a type="button" class="btn btn-light mx-2" href="{% url 'trip_create' %}" style="border:1px solid #e5e5e5;">Log New Trip</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-warning mx-2" aria-current="page" href="#" style="border:1px solid black;">Close Trip</a>
+                <a type="button" class="btn mx-2" aria-current="page" href="#" style="background-color:#e9c46a;">Close Trip</a>
             </li>
         </ul>
     </div>    
@@ -49,8 +49,8 @@
         <div class="row mt-1">
             <div class="col-12 mx-2">
                 <table class="table table-hover caption-top rounded trip-list">
-                    <caption class="fs-3">CLOSE TRIPS</caption>
-                    <thead class="text-grey" style="background-color:#ade8f4">
+                    <caption class="fs-3">Close Completed Trips</caption>
+                    <thead class="text-white" style="background-color:#2a9d8f">
                         <tr>
                             <th scope="col"class="align-middle">Trip ID</th>
                             <th scope="col"class="text-center align-middle">Start Date</th>

@@ -1,0 +1,15 @@
+.title_card .stats_card {
+  /* text-overflow: ellipsis; */
+  /* overflow: hidden; */
+  /* white-space: nowrap; */
+  position: relative;
+}
+
+.title_card .stats_card:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 85px;
+  border-left: 2px solid #adb2b5;
+  margin-top: 10px;
+}

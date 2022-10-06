@@ -264,7 +264,43 @@ class TripDetailView(LoginRequiredMixin, DetailView):
 @login_required
 def TripPendingListView(request):
     queryset = Trip.objects.filter(complete = False) 
-    return render(request,'trip_complete.html', {'data':queryset})           
+    return render(request,'trip_end.html', {'data':queryset})           
+
+@login_required    
+def TripEndView(request, pk):
+    template_name = 'trip_amounts.html'
+    
+    if request.method == 'GET':
+        amount_form = TripAmountForm(request.GET or None, trip_id = pk)
+        
+    if request.method == 'POST':
+        end_date = request.POST.get('enddate')
+        amount_form = TripAmountForm(request.POST or None, trip_id = pk)    
+        
+        if amount_form.is_valid():
+            selected_trip = Trip.objects.get(pk=pk)
+            if selected_trip.start_date > datetime.strptime(end_date,"%Y-%m-%d").date():
+                messages.error(request, "Error! Trip End Date cannot be earlier than Trip Start Date", extra_tags='danger')
+            else:
+                amount_form.save()
+                selected_trip.complete = True
+                selected_trip.end_date = end_date
+                selected_trip.save()
+                # Get Kms Travelled by Route
+                run_kms = selected_trip.route.distance
+                wheels = Wheel.objects.filter(~Q(serial_number=None), vehicle_number=selected_trip.vehicle_number, purchase_date__lte=selected_trip.start_date)
+                if wheels.exists():
+                    for wheel in wheels:
+                        wheel.usage = F('usage') + run_kms
+                        
+                    Wheel.objects.bulk_update(wheels, ['usage'])
+                
+                messages.success(request, "Trip Closed Successfully", extra_tags='success')    
+                return redirect('trip_pending')
+        
+    return render(request, template_name,{'form': amount_form})    
+    
+    
     
 class TripCloseView(SuccessMessageMixin, LoginRequiredMixin, View):    
     def post(self, request, *args, **kwargs):

@@ -1,7 +1,31 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-
+{% load static %}
 {% block title %}Dashboard{% endblock title %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<div class="row my-4 title_card" style="background-color:#fff;">
+    <div class="col-md-3" style="border-bottom:1px solid #adb2b5;">
+        <h4 class="fw-bold" style="color:#264653"><span class="material-icons align-middle mx-3" style="font-size:25px;color:#e76f51">moving</span>On Going Trips</h4>
+        <div class="count fs-1 fw-bold mx-3" style="color:#2a9d8f">15<span class="fs-6 mx-2">Trips</span></div>
+        <span class="mx-3">4% From Last Week</span>
+    </div>
+    <div class="col-md-3 stats_card" style="border-bottom:1px solid #adb2b5;">
+        <h4 class="fw-bold" style="color:#264653"><span class="material-icons align-middle mx-3" style="font-size:25px;color:#e76f51">checklist</span>Completed Trips</h4>
+        <div class="count fs-1 fw-bold mx-3" style="color:#e9c46a;">200<span class="fs-6 mx-2">Trips</span></div>
+        <span class="mx-3">4% From Last Week</span>
+    </div>
+    <div class="col-md-3 stats_card" style="border-bottom:1px solid #adb2b5;">
+        <h4 class="fw-bold" style="color:#264653"><span class="material-icons align-middle mx-3" style="font-size:25px;color:#e76f51">local_gas_station</span>Fuel Consumption</h4>
+        <div class="count fs-1 fw-bold mx-3" style="color:#f4a261">15<span class="fs-6 mx-2">Litres</span></div>
+        <span class="mx-3">4% From Last Week</span>
+    </div>
+    <div class="col-md-3 stats_card" style="border-bottom:1px solid #adb2b5;">
+        <h4 class="fw-bold" style="color:#264653"><span class="material-icons align-middle mx-3" style="font-size:25px;color:#e76f51">local_shipping</span>Vehicles Used</h4>
+        <div class="count fs-1 fw-bold mx-3" style="color:#264653">1,500<span class="fs-6 mx-2">Trucks</span></div>
+        <span class="mx-3">4% From Last Week</span>
+    </div>
+</div>
+
 {% endblock content %}

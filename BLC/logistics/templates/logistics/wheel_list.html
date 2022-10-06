@@ -26,9 +26,9 @@
     <div class="row">
         <div class="col-11 mx-3 my-0 align-middle">
             {% if wheel_list|length == 0 %}
-                <a href="{% url 'wheel_create' vehicle_number.pk %}" type="button" class="btn btn-success btn-sm my-3" style="float:left;">Add Tyre Details</a>
+                <a href="{% url 'wheel_create' vehicle_number.pk %}" type="button" class="btn btn-sm my-3 text-white" style="float:left;background-color:#264653;">Add Tyre Details</a>
             {% else %}
-                <a href="{% url 'wheel_edit' vehicle_number.pk %}" type="button" class="btn btn-primary btn-sm my-3" style="float:left;">Edit Tyre Details</a>
+                <a href="{% url 'wheel_edit' vehicle_number.pk %}" type="button" class="btn btn-sm my-3 text-white" style="float:left;background-color:#264653;">Edit Tyre Details</a>
             {% endif %}
             <input type="search" placeholder="Search..." class="form-control search-input my-3" data-table="tyre-list"/ style="float:right;width:300px;margin-left:auto;">  
         </div>
@@ -38,7 +38,7 @@
         <div class="col-11 mx-3">
             <table class="table table-hover caption-top rounded tyre-list">
                 <caption class="fs-3">Tyre Details for Vehicle - {{vehicle_number.vehicle_number}}</caption>
-                <thead class="text-grey" style="background-color:#9CB4CC">
+                <thead class="text-white" style="background-color:#2a9d8f">
                     <tr>
                         <th scope="col"class="align-middle">Tyre Serial Number</th>
                         <th scope="col"class="text-center align-middle">Installation Date</th>

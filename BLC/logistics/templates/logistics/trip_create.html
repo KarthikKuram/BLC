@@ -56,16 +56,16 @@
     <div class="col-12">
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid black;">On-Going Trips</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'ongoing_trip_list' %}" style="border:1px solid #e5e5e5;">On-Going Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid black;">Completed Trips</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'completed_trip_list' %}" style="border:1px solid #e5e5e5;">Completed Trips</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-warning mx-3" aria-current="page" href="{% url 'trip_create' %}">Log New Trip</a>
+                <a type="button" class="btn mx-3 text-dark fw-bold" style="background-color:#e9c46a;" aria-current="page" href="{% url 'trip_create' %}">Log New Trip</a>
             </li>
             <li class="nav-item">
-                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid black;">Close Trip</a>
+                <a type="button" class="btn btn-light mx-3" href="{% url 'trip_pending' %}" style="border:1px solid #e5e5e5;">Close Trip</a>
             </li>
         </ul>
     </div>    
@@ -91,8 +91,8 @@
         </div>
     </div>
 
-    <div class="col-12 col-md-9 mx-3 mb-0 mt-2">
-        <div class="rounded p-3 mt-2" style="background-color:#eff7f6;">
+    <div class="col-12 col-md-11 mx-3 mb-0 mt-2">
+        <div class="rounded p-3 mt-2" style="background-color:#fdfdff;opacity:1;border:2px solid #e5e5e5;">
             <p class="fs-5" style="color:#BA135D;">Trip Details</p>
             <form class="row g-3" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -104,7 +104,7 @@
                     {% endif %}
                 </fieldset>    
                 
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label for="{{form.trip_id.id_for_label}}" class="form-label"><strong>Trip ID</strong></label>
                     {% if form.trip_id.errors %}
                         {% render_field form.trip_id class+='form-control is-invalid' %}
@@ -118,7 +118,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label for="{{form.start_date.id_for_label}}" class="form-label"><strong>Start Date</strong></label>
                     {% if form.start_date.errors %}
                         {% render_field form.start_date class+='form-control is-invalid' %}
@@ -132,7 +132,21 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-4">    
+                <div class="col-md-3">    
+                    <label for="{{form.shipment_no.id_for_label}}" class="form-label"><strong>Shipment Number</strong></label>
+                    {% if form.shipment_no.errors %}
+                        {% render_field form.shipment_no class+='form-control is-invalid' %}
+                        {% for error in form.shipment_no.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.shipment_no class+='form-control' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3">    
                     <label for="{{form.vehicle_number.id_for_label}}" class="form-label"><strong>Vehicle</strong></label>
                     {% if form.vehicle_number.errors %}
                         {% render_field form.vehicle_number class+='form-control is-invalid select2_widget' %}
@@ -146,7 +160,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-8">    
+                <div class="col-md-6">    
                     <label for="{{form.route.id_for_label}}" class="form-label"><strong>Trip Route</strong></label>
                     {% if form.route.errors %}
                         {% render_field form.route class+='form-control is-invalid select2_widget' %}
@@ -160,7 +174,7 @@
                     {% endif %}
                 </div>
                 
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label for="{{form.driver.id_for_label}}" class="form-label"><strong>Driver</strong></label>
                     {% if form.driver.errors %}
                         {% render_field form.driver class+='form-control is-invalid select2_widget' %}
@@ -174,7 +188,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-8">    
+                <div class="col-md-3">    
                     <label for="{{form.product.id_for_label}}" class="form-label"><strong>Product</strong></label>
                     {% if form.product.errors %}
                         {% render_field form.product class+='form-control is-invalid' %}
@@ -188,7 +202,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col-md-4">    
+                <div class="col-md-3">    
                     <label for="{{form.load.id_for_label}}" class="form-label"><strong>Product Weight</strong></label>
                     {% if form.load.errors %}
                         {% render_field form.load class+='form-control is-invalid' %}
@@ -202,8 +216,50 @@
                     {% endif %}
                 </div>
 
+                <div class="col-md-3">    
+                    <label for="{{form.eway_bill.id_for_label}}" class="form-label"><strong>E-Way Bill</strong></label>
+                    {% if form.eway_bill.errors %}
+                        {% render_field form.eway_bill class+='form-control is-invalid' %}
+                        {% for error in form.eway_bill.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.eway_bill class+='form-control' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3">    
+                    <label for="{{form.driver_advance.id_for_label}}" class="form-label"><strong>Driver Advance</strong></label>
+                    {% if form.driver_advance.errors %}
+                        {% render_field form.driver_advance class+='form-control is-invalid' %}
+                        {% for error in form.driver_advance.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.driver_advance class+='form-control' placeholder+='Rs' %}
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3">    
+                    <label for="{{form.fuel_advance.id_for_label}}" class="form-label"><strong>Fuel Advance</strong></label>
+                    {% if form.fuel_advance.errors %}
+                        {% render_field form.fuel_advance class+='form-control is-invalid' %}
+                        {% for error in form.fuel_advance.errors %}
+                            <div class="invalid-feedback">
+                                <strong>{{error}}</strong>
+                            </div>
+                        {% endfor %}
+                    {% else %} 
+                        {% render_field form.fuel_advance class+='form-control' placeholder+='Rs' %}
+                    {% endif %}
+                </div>
+
                 <div class="d-flex flex justify-content-center align-items-center">
-                    <button type="submit" class="btn btn-success" style="width:10%;padding:5px;">Create</button>
+                    <button type="submit" class="btn text-white" style="width:10%;padding:5px;background-color:#264653;">Create</button>
                 </div>    
             </form>
         </div>    
